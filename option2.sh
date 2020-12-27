@@ -15,3 +15,5 @@ echo "3. Large			6. Stuffed Crust"
 echo "0. Back to main menu"
 echo ""
 echo "What size $pizza would you like?"
+read option
+cat "$option"
