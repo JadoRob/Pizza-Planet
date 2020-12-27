@@ -1,1 +1,1 @@
-customerName=
+customerName=""
