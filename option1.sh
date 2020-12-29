@@ -66,14 +66,16 @@ echo "You have chosen ${type[2]}. Stuffed is the best tasting!!"
 fi
 
 while true; do
-read -p "So far we have $crust and $selection at $cost. Is this order correct? [Y/N] >>  " yn
+read -p "So far we have ${type[$crust-1]} and ${size[$selection-1]} at ${cost[$selection-1]}. Is this order correct? [Y/N] >>  " yn
 case $yn in
 [Yy]* ) echo "Thank you your order will be sent to your cart!!"; break;;
 [Nn]* ) echo "Sorry for the mistake, let us begin again."; break;;
 esac
 done
 
-read -p "Thank you for your order we are returning you to the main menu ... "
+echo "Thank you for your order we are returning you to the main menu ... "
 
-data=($crust $selection)
+data=($type $size $cost)
 data >> cart.data
+
+
