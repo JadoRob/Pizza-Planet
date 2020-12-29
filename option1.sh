@@ -9,6 +9,7 @@ sleep 2
 counter=1
 size=(Small Medium Large)
 cost=(9.99 11.99 15.99)
+pizza=(Pepperoni\ Pizza)
 
 for c in ${cost[@]}
 do
@@ -75,7 +76,6 @@ done
 
 echo "Thank you for your order we are returning you to the main menu ... "
 
-data=($type $size $cost)
-data >> cart.data
 
+echo "${size[$selection-1]}:${type[crust-1]}:$pizza:${cost[$selection-1]}" >> cart.data
 
