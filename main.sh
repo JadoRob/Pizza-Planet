@@ -70,6 +70,6 @@ printf "\nLooks great, your total comes to \$$checkoutTotal\n\n"
 read -p "Confirm purchase (Y/N)? " yn   # Yes will print goodbye message. For now, ends script regardless of answer
 
 if [[ $yn =~ [Yy] ]]; then
-    printf "\nThank you for choosing Planet Pizza! You will be notified once your order is <read/on the way>.\n"
+    printf "\nThank you for choosing Planet Pizza! You will be notified once your order is <ready/on the way>.\n"
     echo "Have a great day!"
 fi
