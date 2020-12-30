@@ -57,7 +57,12 @@ until [ "$question" =="y" ]
 do
 showOptions
 getOrder
-echo "Add a $size $crust $pizza for $price to your order?"
+read -p "Add a $size $crust $pizza for $price to your order? [Y/N] >> " yn
+case $yn in
+[Yy]* ) echo "Thanks!!! your order has been added to your cart"; break;;
+[Nn]* ) echo "No problems, lets take your order again."; break;;
+esac
+done
 read question
 echo "$question"
 done
