@@ -34,6 +34,18 @@ calcTotal() {   # Calculates total in cart.data
     echo $total
 }
 
+displayCart() {
+    echo '______________ YOUR CART ______________'
+    cat cart.data | while read line; do
+        echo
+        echo "$(echo $line | cut -d ':' -f 3)             $(echo $line | cut -d ':' -f 4)"
+        echo -e "  \u2022 Size: $(echo $line | cut -d ':' -f 1)"
+        echo -e "  \u2022 Crust: $(echo $line | cut -d ':' -f 2)"
+    done
+    echo _______________________________________
+    echo SUBTOTAL: \$$(calcTotal)
+}
+
 ##### incomplete - future feature
 #if grep -ixq "$customer" customers.txt; then
 #    echo 'customer exists'
@@ -54,6 +66,8 @@ displayOptions
 
 # Order additional items
 while [ $doneShopping = false ]; do
+    echo
+    displayCart
     read -p $'\nWould you like to add anything else (Y/N)? ' yn
     if [[ $yn =~ [Yy] ]]; then
         printf "\nWhat would you like to add?\n"
