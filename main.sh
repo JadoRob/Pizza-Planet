@@ -31,7 +31,7 @@ displayOptions
 
 while [ $doneShopping = false ]; do # Doesn't do anything yet. For now, just repeats until you answer with anything but Yy
     read -p $'\nWould you like to add anything else (Y/N)? ' yn
-    if [ $yn == "Y" ] || [ $yn == "y" ]; then
+    if [[ $yn =~ [Yy] ]]; then
         printf "\nWhat would you like to add?\n"
         displayOptions
     else
@@ -45,7 +45,7 @@ printf "\nLooks great, your total comes to \$$checkoutTotal\n\n"
 
 read -p "Confirm purchase (Y/N)? " yn   # Yes will print goodbye message. For now, ends script regardless of answer
 
-if [ $yn == "Y" ] || [ $yn == "y" ]; then
+if [[ $yn =~ [Yy] ]]; then
     printf "\nThank you for choosing Planet Pizza! You will be notified once your order is <read/on the way>.\n"
     echo "Have a great day!"
 fi
