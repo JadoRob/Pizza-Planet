@@ -1,8 +1,9 @@
 #!/bin/bash
 
 ########### VARIABLES ###########
-choices=("Pepperoni Pizza" "Meat Lover's Pizza" "Veggie Pizza") # Menu items
-doneShopping=false  # Will be used below in a WHILE loop
+choices=("Pepperoni Pizza" "Meat Lover's Pizza" "Veggie Pizza")
+doneShopping=false
+deliveryFee=0.00
 
 ########### FUNCTIONS ###########
 displayOptions() {  # Displays menu items
@@ -23,15 +24,15 @@ selectOption() {
     esac
 }
 
-calcTotal() {   # Calculates total in cart.data
-    total=0
+calcSubtotal() {   # Calculates total in cart.data
+    subTotal=0
 
     for i in `cut -d ':' -f 4 cart.data`; do
         i=`echo $i | sed "s/\"//g"`
-        total=$(bc <<< "$total + $i")
+        subTotal=$(bc <<< "$subTotal + $i")
     done
 
-    echo $total
+    echo $subTotal
 }
 
 calcTax() {
@@ -49,17 +50,17 @@ displayCart() {
     echo '______________ YOUR CART ______________'
     cat cart.data | while read line; do
         echo
-        echo "$(echo $line | cut -d ':' -f 3)             $(echo $line | cut -d ':' -f 4)"
+        echo "$(echo $line | cut -d ':' -f 3)             \$$(echo $line | cut -d ':' -f 4)"
         echo -e "  \u2022 Size: $(echo $line | cut -d ':' -f 1)"
         echo -e "  \u2022 Crust: $(echo $line | cut -d ':' -f 2)"
     done
     echo _______________________________________
-    echo SUBTOTAL: \$$(calcTotal)
+    echo "                     SUBTOTAL: \$$(calcSubtotal)"
 }
 
 ##### incomplete - future feature
-#if grep -ixq "$customer" customers.txt; then
-#    echo 'customer exists'
+#if grep -ixq "$email" customers.txt; then
+#    echo 'email exists'
 # This checks lines for exact name match
 #fi
 
@@ -77,26 +78,37 @@ displayOptions
 
 # Order additional items
 while [ $doneShopping = false ]; do
-    echo
+    clear
     displayCart
-    read -p $'\nWould you like to add anything else (Y/N)? ' yn
+    read -p $'\nWould you like to add anything else (Y/N)? >> ' yn
     if [[ $yn =~ [Yy] ]]; then
         printf "\nWhat would you like to add?\n"
         displayOptions
     else
         doneShopping=true
+        echo
     fi
 done
 
-subTotal=$(calcTotal)   # calculate total
+read -p "Press 1 for carryout, 2 for delivery >> " orderType
+
+if [[ $((orderType)) == 2 ]]; then deliveryFee=5.00; fi
+
+# Calculate totals & tax
+subTotal=$(calcSubtotal)
 tax=$(calcTax)
+grandTotal=$(bc <<< $tax+$subTotal+$deliveryFee)
 
 printf "\nLooks great, your total before tax comes to \$$subTotal\n\n"
-echo "Tax: \$$tax"
-echo Total: \$$(bc <<< $tax+$subTotal)
+
+# Display totals
+echo "     Subtotal: \$$subTotal"
+echo " Delivery Fee:  \$$deliveryFee"
+echo "Estimated Tax:  \$$tax"
+echo "   GrandTotal: \$$grandTotal"
 echo
 
-read -p "Confirm purchase (Y/N)? " yn   # Yes will print goodbye message. For now, ends script regardless of answer
+read -p "Confirm purchase (Y/N)? " yn
 
 if [[ $yn =~ [Yy] ]]; then
     printf "\nThank you for choosing Planet Pizza! You will be notified once your order is <ready/on the way>.\n"
