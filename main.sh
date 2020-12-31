@@ -34,6 +34,17 @@ calcTotal() {   # Calculates total in cart.data
     echo $total
 }
 
+calcTax() {
+    tax=$(echo "scale=2;$subTotal*.05" | bc -l)
+    if [[ $tax < 1 ]]; then
+    {
+        tax="0$tax"
+    }
+    fi
+
+    echo $tax
+}
+
 displayCart() {
     echo '______________ YOUR CART ______________'
     cat cart.data | while read line; do
@@ -77,9 +88,13 @@ while [ $doneShopping = false ]; do
     fi
 done
 
-checkoutTotal=`calcTotal`   # calculate total
+subTotal=$(calcTotal)   # calculate total
+tax=$(calcTax)
 
-printf "\nLooks great, your total comes to \$$checkoutTotal\n\n"
+printf "\nLooks great, your total before tax comes to \$$subTotal\n\n"
+echo "Tax: \$$tax"
+echo Total: \$$(bc <<< $tax+$subTotal)
+echo
 
 read -p "Confirm purchase (Y/N)? " yn   # Yes will print goodbye message. For now, ends script regardless of answer
 
