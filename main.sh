@@ -18,6 +18,7 @@ displayOptions() {  # Displays menu items
 
 selectOption() {
     read -p "[1-2] >> " option
+    
     case $option in
         1) ./option1.sh ;;
         2) ./option2.sh ;;
@@ -37,11 +38,8 @@ calcSubtotal() {   # Calculates total in cart.data
 
 calcTax() {
     tax=$(echo "scale=2;$subTotal*.05" | bc -l)
-    if [[ $tax < 1 ]]; then
-    {
-        tax="0$tax"
-    }
-    fi
+    
+    if [[ $tax < 1 ]]; then tax="0$tax" fi
 
     echo $tax
 }
