@@ -22,6 +22,7 @@ selectOption() {
     case $option in
         1) ./option1.sh ;;
         2) ./option2.sh ;;
+        3) ./Option3.sh ;;
     esac
 }
 
@@ -39,7 +40,7 @@ calcSubtotal() {   # Calculates total in cart.data
 calcTax() {
     tax=$(echo "scale=2;$subTotal*.05" | bc -l)
     
-    if [[ $tax < 1 ]]; then tax="0$tax" fi
+    if [[ $tax < 1 ]]; then tax="0$tax"; fi
 
     echo $tax
 }
