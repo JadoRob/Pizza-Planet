@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ########### VARIABLES ###########
-choices=("Pepperoni Pizza" "Meat Lover's Pizza" "Veggie Pizza")
+choices=("Premade Pizza" "Custom Pizza" "Other")
 doneShopping=false
 deliveryFee=0.00
 
@@ -20,9 +20,9 @@ selectOption() {
     read -p "[1-2] >> " option
     
     case $option in
-        1) ./option1.sh ;;
-        2) ./option2.sh ;;
-        3) ./Option3.sh ;;
+        1) ./menu.sh ;;
+        2) ./option156.sh ;;
+        3) ./food.sh ;;
     esac
 }
 
