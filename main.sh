@@ -17,7 +17,7 @@ displayOptions() {  # Displays menu items
 }
 
 selectOption() {
-    read -p "[1-2] >> " option
+    read -p "[1-3] >> " option
     
     case $option in
         1) ./menu.sh ;;
