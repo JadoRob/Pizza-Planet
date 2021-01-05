@@ -22,7 +22,7 @@ selectOption() {
     case $option in
         1) ./menu.sh ;;
         2) ./option156.sh ;;
-        3) ./food.sh ;;
+        3) ./otherfood.sh ;;
     esac
 }
 
