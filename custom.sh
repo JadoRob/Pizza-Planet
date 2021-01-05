@@ -5,7 +5,7 @@ clear
 counter=1
 pizza=Custom\ Pizza
 small=9.99; medium=11.99; large=14.99
-toppings=(Parmesan_cheese Ham Motzorella_cheese Broccoli Bacon Pepperoni Sausage Pineapple Tomato Green_Peppers Jalapeno Onions Chicken Red_Peppers)
+toppings=("Parmesan Cheese" Ham "Motzorella Cheese" Broccoli Bacon Pepperoni Sausage Pineapple Tomato "Green Peppers" Jalapeno Onions Chicken "Red Peppers")
 
 echo "Welcome to the customize pizza section of our menu!"
 echo ""
@@ -14,9 +14,9 @@ echo ""
 
 function showToppings {
 
-for t in ${toppings[@]}
+for t in ${!toppings[@]}
 do
-echo "$counter. $t"
+echo "$counter. ${toppings[$t]}"
 ((counter++))
 done
 }
