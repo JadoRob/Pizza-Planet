@@ -25,7 +25,7 @@ echo ""
 }
 
 function getOrder {
-echo "Which size of $pizza do you like?"
+echo "Which size of $pizza do you like? [1-3] >> "
 read option
 if (($option == 1))
 then
@@ -41,7 +41,7 @@ then
 price=$large
 
 fi
-echo "Which crust of the $pizza do you want?"
+echo "Which crust of the $pizza do you want? [4-6] >> "
 read option
 if (($option == 4))
 then
@@ -55,17 +55,17 @@ fi
 }
 until [ "$question" =="y" ]
 do
+
 showOptions
 getOrder
-read -p "Add a $size $crust $pizza for $price to your order? [Y/N] >> " yn
-case $yn in
-[Yy]* ) echo "Thanks!!! your order has been added to your cart"; break;;
-[Nn]* ) echo "No problems, lets take your order again."; break;;
-esac
-done
+echo "Add a $size $crust $pizza for $price to your order? [y/n] >> " yn 
 read question
-echo "$question"
-done
+if (( $option == y))
+then
+echo "Thanks!!! Your order is completed." 
+else
+
+echo "Lets  get your order again" 
+
 echo "$size:$crust:$pizza:$price" >> cart.data
-echo "Thank you $name!, your order has been added. Returning to the main menu ..."
-sleep 3
+
