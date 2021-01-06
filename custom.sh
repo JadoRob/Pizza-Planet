@@ -5,7 +5,7 @@ clear
 counter=1
 pizza=Custom\ Pizza
 small=9.99; medium=11.99; large=14.99
-toppings=(Parmesan_cheese Ham Motzorella_cheese Broccoli Bacon Pepperoni Sausage Pineapple Tomato Green_Peppers Jalapeno Onions Chicken Red_Peppers)
+toppings=("Parmesan Cheese" Ham "Motzorella Cheese" Broccoli Bacon Pepperoni Sausage Pineapple Tomato "Green Peppers" Jalapeno Onions Chicken "Red Peppers")
 
 echo "Welcome to the customize pizza section of our menu!"
 echo ""
@@ -14,9 +14,9 @@ echo ""
 
 function showToppings {
 
-for t in ${toppings[@]}
+for t in ${!toppings[@]}
 do
-echo "$counter. $t"
+echo "$counter. ${toppings[$t]}"
 ((counter++))
 done
 }
@@ -197,7 +197,7 @@ size="Large"
 price=$large
 elif (($option == 0))
 then
-./menu.sh
+./main.sh
 fi
 echo "What kind of crust would you like this $pizza to have? [4-6] >> "
 read option
@@ -212,7 +212,7 @@ then
 crust="Stuffed Crust"
 elif (($option == 0))
 then
-./menu.sh
+./main.sh
 fi
 }
 
@@ -231,4 +231,4 @@ done
 echo "$size:$crust:$pizza:$price:$sel1:$sel2:$sel3" >> cart.data
 echo "Returning to the main menu."
 sleep 3
-./menu.sh
+./main.sh
