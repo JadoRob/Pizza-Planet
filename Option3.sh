@@ -53,19 +53,18 @@ else
 crust="Stuffed Crust"
 fi
 }
-until [ "$question" =="y" ]
+until [ "$question" == "y" ]
 do
 
 showOptions
 getOrder
-echo "Add a $size $crust $pizza for $price to your order? [y/n] >> " yn 
+echo "Add a $size $crust $pizza for $price to your order? [y/n] >> "  
 read question
-if (( $option == y))
-then
-echo "Thanks!!! Your order is completed." 
-else
 
-echo "Lets  get your order again" 
+done 
 
 echo "$size:$crust:$pizza:$price" >> cart.data
 
+echo "Thank you your order has been added!!!"
+
+sleep 3
