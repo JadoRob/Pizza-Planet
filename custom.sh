@@ -197,7 +197,7 @@ size="Large"
 price=$large
 elif (($option == 0))
 then
-./main.sh
+exit
 fi
 echo "What kind of crust would you like this $pizza to have? [4-6] >> "
 read option
@@ -212,7 +212,7 @@ then
 crust="Stuffed Crust"
 elif (($option == 0))
 then
-./main.sh
+exit
 fi
 }
 
@@ -231,4 +231,4 @@ done
 echo "$size:$crust:$pizza:$price:$sel1:$sel2:$sel3" >> cart.data
 echo "Returning to the main menu."
 sleep 3
-./main.sh
+exit

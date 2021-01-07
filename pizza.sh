@@ -34,7 +34,7 @@ size="Large"
 price=$large
 elif (($option == 0))
 then
-./main.sh
+exit
 fi
 echo "What kind of crust would you like this $pizza pizza to have? [4-6] >> "
 read option
@@ -49,7 +49,7 @@ then
 crust="Stuffed Crust"
 elif (($option == 0))
 then
-./main.sh
+exit
 fi
 }
 until [ "$question" == "y" ]
@@ -62,4 +62,4 @@ done
 echo "$size:$crust:$pizza:$price" >> cart.data
 echo "Thank you, your order has been added. Returning to the main menu."
 sleep 3
-./main.sh
+exit
