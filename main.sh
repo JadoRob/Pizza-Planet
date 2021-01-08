@@ -48,10 +48,19 @@ calcTax() {
 displayCart() {
     echo '______________ YOUR CART ______________'
     cat cart.data | while read line; do
+        size=$(echo $line | cut -d ':' -f 1)
+        pizza=$(echo $line | cut -d ':' -f 3)
+        crust=$(echo $line | cut -d ':' -f 2)
         echo
-        echo "$(echo $line | cut -d ':' -f 3)             \$$(echo $line | cut -d ':' -f 4)"
-        echo -e "  \u2022 Size: $(echo $line | cut -d ':' -f 1)"
-        echo -e "  \u2022 Crust: $(echo $line | cut -d ':' -f 2)"
+        echo "$size $pizza, $crust             \$$(echo $line | cut -d ':' -f 4)"
+        echo -en "  \u2022 Toppings: "
+
+        toppings=5
+        while [[ $(echo $line | cut -d ':' -f $toppings) ]]; do
+            echo -n "$(echo $line | cut -d ':' -f $toppings), "
+            ((toppings++))
+        done
+        echo
     done
     echo _______________________________________
     echo "                     SUBTOTAL: \$$(calcSubtotal)"
