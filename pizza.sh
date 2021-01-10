@@ -6,6 +6,27 @@ small=9.99; medium=11.99; large=14.99
 function showOptions {
 clear
 
+function showGraphic() {
+	echo "                                          _.oo."
+	echo "                   _.u[[/;:,.         .odMMMMMM'"
+	echo "                 .o888UU[[[/;:-.  .o@P^    MMM^"
+	echo "                oN88888UU[[[/;::-.        dP^"
+	echo "               dNMMNN888UU[[[/;::-.   .o@P^"
+	echo "              ,MMMMMMN888UU[[/;::-. o@^"
+	echo "              NNMMMNN888UU[[[/~.o@P^"
+	echo "              888888888UU[[[/o@^-.."
+	echo "             oI8888uu[[[/o@P^:--.."
+	echo "          .@^  YUU[[[/o@^;::---.."
+	echo "        oMP     ^/o@P^;:::---.."
+	echo "     .dMMM    .o@^ ^;::---..."
+	echo "    dMMMMMMM@^ `      `^^^^"
+	echo "   YMMMUP^"
+	echo "    ^^"
+	figlet "Pizza Planet"
+	echo
+}
+
+showGraphic
 echo "Welcome to the $pizza pizza section of our menu!"
 echo ""
 echo "$pizza Pizza Menu Options"
@@ -59,7 +80,7 @@ getOrder
 echo "Add a $size $crust $pizza for $price to your order? [y/n] >> "
 read question
 done
-echo "$size:$crust:$pizza:$price" >> cart.data
+echo "$size:$crust:$pizza\ pizza:$price" >> cart.data
 echo "Thank you, your order has been added. Returning to the main menu."
 sleep 3
 exit
