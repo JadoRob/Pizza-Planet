@@ -7,6 +7,27 @@ pizza=Custom\ Pizza
 small=9.99; medium=11.99; large=14.99
 toppings=("Parmesan Cheese" Ham "Motzorella Cheese" Broccoli Bacon Pepperoni Sausage Pineapple Tomato "Green Peppers" Jalapeno Onions Chicken "Red Peppers")
 
+function showGraphic() {
+	echo "                                          _.oo."
+	echo "                   _.u[[/;:,.         .odMMMMMM'"
+	echo "                 .o888UU[[[/;:-.  .o@P^    MMM^"
+	echo "                oN88888UU[[[/;::-.        dP^"
+	echo "               dNMMNN888UU[[[/;::-.   .o@P^"
+	echo "              ,MMMMMMN888UU[[/;::-. o@^"
+	echo "              NNMMMNN888UU[[[/~.o@P^"
+	echo "              888888888UU[[[/o@^-.."
+	echo "             oI8888uu[[[/o@P^:--.."
+	echo "          .@^  YUU[[[/o@^;::---.."
+	echo "        oMP     ^/o@P^;:::---.."
+	echo "     .dMMM    .o@^ ^;::---..."
+	echo "    dMMMMMMM@^ `      `^^^^"
+	echo "   YMMMUP^"
+	echo "    ^^"
+	figlet "Pizza Planet"
+	echo
+}
+
+showGraphic
 echo "Welcome to the customize pizza section of our menu!"
 echo ""
 echo "Custom Pizza Menu Options"
