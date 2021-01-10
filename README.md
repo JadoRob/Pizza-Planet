@@ -8,4 +8,8 @@ A Linux project created for the AWS re/Start and NCI 12 week course. Using Linux
 
 ## Due Dates
 Code Submission (Code Freeze): **January 28th, 2021 by 11:59 PM**</br>
+<<<<<<< HEAD
 Project Presentation: **January 29th, 2021 @9:00 AM**
+=======
+Project Presentation: **January 29th, 2021 @9:00 AM**
+>>>>>>> main
