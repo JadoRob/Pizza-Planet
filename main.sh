@@ -46,22 +46,15 @@ calcTax() {
 }
 
 displayCart() {
-    echo '______________ YOUR CART ______________'
+    echo '____________________________ YOUR CART ____________________________'
     cat cart.data | while read line; do
-        echo
-        echo "$(echo $line | cut -d ':' -f 3)             \$$(echo $line | cut -d ':' -f 4)"
-        echo -e "  \u2022 Size: $(echo $line | cut -d ':' -f 1)"
-        echo -e "  \u2022 Crust: $(echo $line | cut -d ':' -f 2)"
+        echo $line | awk -F ':' '{ printf "\n  %-55s $%s\n", $1" "$3, $4 }'
+        echo -e "    \u2022 "$(echo $line | awk -F ':' '{print $2}')
+        echo -e "    \u2022 Toppings: "$(echo $line | awk -F ':' '{for (i = 5; i < NF; i++) printf $i", "} {if (NF > 4) printf $(NF)}')
     done
-    echo _______________________________________
-    echo "                     SUBTOTAL: \$$(calcSubtotal)"
+    echo ___________________________________________________________________
+    printf "%64s" "SUBTOTAL: \$$(calcSubtotal)"
 }
-
-##### incomplete - future feature
-#if grep -ixq "$email" customers.txt; then
-#    echo 'email exists'
-# This checks lines for exact name match
-#fi
 
 ########### START SCRIPT ###########
 
