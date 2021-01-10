@@ -1,4 +1,3 @@
-# linux-project
 # Pizza Planet
 By Andrew Hopkins, James Agyemang, Joven Poblete, and Robert Enojado</br>
 
