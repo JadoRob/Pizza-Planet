@@ -3,10 +3,10 @@ clear
 pizza=$1
 small=9.99; medium=11.99; large=14.99
 
-function showOptions {
+
 clear
 
-function showGraphic() {
+function showGraphic () {
 	echo "                                          _.oo."
 	echo "                   _.u[[/;:,.         .odMMMMMM'"
 	echo "                 .o888UU[[[/;:-.  .o@P^    MMM^"
@@ -22,12 +22,38 @@ function showGraphic() {
 	echo "    dMMMMMMM@^ `      `^^^^"
 	echo "   YMMMUP^"
 	echo "    ^^"
-	figlet "Pizza Planet"
+	figlet "Pizza Planet" | lolcat
 	echo
 }
 
-showGraphic
+showGraphic | lolcat
+
+
+function pizzaTop {
 echo "Welcome to the $pizza pizza section of our menu!"
+echo ""
+echo "You selection of $pizza pizza comes with:  "
+if [[ $pizza == "Pepperoni" ]]
+then
+echo "Double Pepperoni, Chesse and red sauce"
+elif [[ $pizza == "Cheese" ]]
+then
+echo "Tripple cheese of Motzorella, Cheddar, Gorgonzolla all on top of a red sauce"
+elif [[ $pizza == "Veggie" ]]
+then
+echo "Brocooli, Carrots, Red Onions and Cherry Tomatoes on top of a red sauce" 
+elif [[ $pizza == "Meat" ]]
+then
+echo "Pepperoni, Sausage, Bacon and Ham on top of a red sauce"
+elif [[ $pizza == "Hawaiian" ]]
+then
+echo "Pineapple, Ham and Tomato on top of a red sauce"
+fi
+}
+
+pizzaTop
+
+function showOptions {
 echo ""
 echo "$pizza Pizza Menu Options"
 echo ""
