@@ -19,11 +19,11 @@ function showGraphic() {
 	echo "    dMMMMMMM@^ `      `^^^^"
 	echo "   YMMMUP^"
 	echo "    ^^"
-	figlet "Pizza Planet"
+	figlet "Pizza Planet"  | lolcat
 	echo
 }
 
-showGraphic
+showGraphic | lolcat
 echo "Welcome!"
 echo "Here's our pizza menu: "
 echo ""
