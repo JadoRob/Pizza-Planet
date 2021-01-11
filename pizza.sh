@@ -1,6 +1,9 @@
 #!/bin/bash
 clear
 pizza=$1
+top1=$2
+top2=$3
+top3=$4
 small=9.99; medium=11.99; large=14.99
 
 
@@ -32,22 +35,22 @@ showGraphic | lolcat
 function pizzaTop {
 echo "Welcome to the $pizza pizza section of our menu!"
 echo ""
-echo "You selection of $pizza pizza comes with:  "
+echo "Your selection of $pizza pizza comes on red sauce with toppings of:  "
 if [[ $pizza == "Pepperoni" ]]
 then
-echo "Double Pepperoni, Chesse and red sauce"
+echo "Double Pepperoni and Chesse"
 elif [[ $pizza == "Cheese" ]]
 then
-echo "Tripple cheese of Motzorella, Cheddar, Gorgonzolla all on top of a red sauce"
+echo "Tripple cheese of Motzorella, Cheddar, and Gorgonzolla "
 elif [[ $pizza == "Veggie" ]]
 then
-echo "Brocooli, Carrots, Red Onions and Cherry Tomatoes on top of a red sauce" 
+echo "Broccoli, Carrots and Cherry Tomatoes " 
 elif [[ $pizza == "Meat" ]]
 then
-echo "Pepperoni, Sausage, Bacon and Ham on top of a red sauce"
+echo "Pepperoni, Sausage and Bacon"
 elif [[ $pizza == "Hawaiian" ]]
 then
-echo "Pineapple, Ham and Tomato on top of a red sauce"
+echo "Pineapple, Ham and Tomato"
 fi
 }
 
@@ -106,7 +109,7 @@ getOrder
 echo "Add a $size $crust $pizza for $price to your order? [y/n] >> "
 read question
 done
-echo "$size:$crust:$pizza\ pizza:$price" >> cart.data
+echo "$size:$crust:$pizza pizza:$price:$top1:$top2:$top3" >> cart.data
 echo "Thank you, your order has been added. Returning to the main menu."
 sleep 3
 exit

@@ -36,9 +36,9 @@ echo ""
 read -p "Please pick a premade pizza [1-5] >> " choice
 
 case $choice in
-1) ./pizza.sh Pepperoni ;;
-2) ./pizza.sh Meat ;;
-3) ./pizza.sh Veggie ;;
-4) ./pizza.sh Cheese ;;
-5) ./pizza.sh Hawaiian ;;
+1) ./pizza.sh Pepperoni Pepperoni Cheese More\ Pepperoni ;;
+2) ./pizza.sh Meat Pepperoni Sausage Bacon ;;
+3) ./pizza.sh Veggie Broccoli Carrots Cherry\ Tomatoes ;;
+4) ./pizza.sh Cheese Motzorella Cheddar Gorgonzolla ;;
+5) ./pizza.sh Hawaiian Pineapple Ham Tomatoes ;;
 esac
