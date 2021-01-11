@@ -5,27 +5,10 @@
 # Date: 12/31/2020
 
 # Description: This script runs when the other foods option is selected
-# from the main menu
+# 	from the main menu. The menu and products are read from wings.data,
+#	sides.data, or pasta.data, depending on user selection. The selection
+#	is then saved to cart.data for the main script to process.
 
-# Declared variables:
-# Products and prices will be read from otherfoods.data
-product="null"
-price="0"
-choice="null"
-
-#------------------------------------------------------------------------------------
-# Function Declarations
-
-# function that displays options for the user
-# Displayed by reading from the file otherfood.data
-#function showMenu() {
-#	clear
-#	printf "============================================\n"
-#	printf "	                                   |\n"
-#	printf "	Welcome to PIZZA PLANET!!          |\n"
-#	printf "	                                   |\n"
-#	printf "============================================\n"
-#}
 
 function showGraphic() {
 	echo "                                          _.oo."
@@ -47,22 +30,27 @@ function showGraphic() {
 	echo
 }
 
-function showOptions() {
-	echo "Please choose by selecting a number:"
+function showMenu() {
+	echo "Please choose by selecting a number: "
 	echo 
-	# read from otherfood.data, separate using ":" as the delimeter, print 
-	# column 1 of all lines along with line number
-	awk -F: '{print NR") "$2}' otherfood.data
-	echo ""
-	echo "0. Back to main menu"
-	echo 
+	echo "1. Wings"
+	echo "2. Sides"
+	echo "3. Pasta"
+	echo
+	echo "0. Return to Main Menu"
+	echo
 }
 
-function getOrder() {
-	read -p "What would you like?: " choice
-
-	product=$(awk -v var="$choice" -F: '{if(NR==var) print $2}' otherfood.data)
-	price=$(awk -v var="$choice" -F: '{if(NR==var) print $3}' otherfood.data)
+function showSubmenu() {
+	echo "Here's our selection: "
+	echo
+	#show items in the sub menu and save the food type with .data to $file
+	case $1 in
+		1) awk -F: '{print NR". " $1}' wings.data; file="wings.data";;
+		2) awk -F: '{print NR". " $1}' sides.data; file="sides.data";;
+		3) awk -F: '{print NR". " $1}' pasta.data; file="pasta.data";;
+	esac
+	echo
 }
 
 #------------------------------------------------------------------------------------
@@ -72,11 +60,22 @@ until [ "$confirm" == "y" ]
 do
 	clear
 	showGraphic | lolcat
-	showOptions
-	getOrder
-	read -p "Great choice, add $product for \$$price to your order? [y/n]: " confirm 
+	showMenu
+	read -p "What kind of food are you hungry for?: " foodType
+	if (($foodType==0)); then
+		echo "Returning to Main Menu..."
+		sleep 3
+		exit
+	fi
+	showSubmenu $foodType
+	read -p "What would you like?: " choice
+	#Stores the line defined in $choice from the data file ($file)
+	product=$(awk -v var="$choice" '{if(NR==var) print $0}' $file)
+	item=$(echo "$product" | cut -d ":" -f1)
+	price=$(echo "$product" | cut -d ":" -f2)
+	read -p "Great choice, add $item for \$$price to your order? [y/n]: " confirm 
 done
 # save the order to a file
-echo $product:$price >> cart.data
+echo $product >> cart.data
 echo "Thank you!, Your order has been added. Returning to the main menu..."
 sleep 3
