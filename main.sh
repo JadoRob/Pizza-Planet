@@ -6,6 +6,26 @@ doneShopping=false
 deliveryFee=0.00
 
 ########### FUNCTIONS ###########
+showGraphic() {
+	echo "                                          _.oo."
+	echo "                   _.u[[/;:,.         .odMMMMMM'"
+	echo "                 .o888UU[[[/;:-.  .o@P^    MMM^"
+	echo "                oN88888UU[[[/;::-.        dP^"
+	echo "               dNMMNN888UU[[[/;::-.   .o@P^"
+	echo "              ,MMMMMMN888UU[[/;::-. o@^"
+	echo "              NNMMMNN888UU[[[/~.o@P^"
+	echo "              888888888UU[[[/o@^-.."
+	echo "             oI8888uu[[[/o@P^:--.."
+	echo "          .@^  YUU[[[/o@^;::---.."
+	echo "        oMP     ^/o@P^;:::---.."
+	echo "     .dMMM    .o@^ ^;::---..."
+	echo "    dMMMMMMM@^ `      `^^^^"
+	echo "   YMMMUP^"
+	echo "    ^^"
+	figlet "Pizza Planet"
+	echo
+}
+
 displayOptions() {  # Displays menu items
     echo --------------------------------------------
     for i in ${!choices[@]}; do
@@ -68,6 +88,7 @@ displayCart() {
 ./dependencies.sh   # checks for and installs required commands
 . account.sh
 
+showGraphic | lolcat
 echo Welcome to Pizza Planet!
 echo
 
