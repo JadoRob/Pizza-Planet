@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "email": "guest",
+      "name": "Guest Orders",
+      "orders": [],
+      "allOrders": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "email": "test@gmail.com",
+      "name": "Joven",
+      "orders": [
+        2,
+        3
+      ]
+    }
+  ]
+}
