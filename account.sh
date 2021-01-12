@@ -44,10 +44,8 @@ getOrders() {   # $1:UserID
                 (2) orderList[$i]="00${curOrder}" ;;
                 (3) orderList[$i]="0${curOrder}" ;;
         esac
-        # orderList=( "${orderList[@]}" "$curOrder" )
     done
     echo "${orderList[@]}"
-    # echo "${orderList[@]}"      # prints array of orders based on User ID
 }
 
 ### SET functions require User ID
@@ -99,6 +97,12 @@ addUser() {     # $1:Email      $2:Name
     echo
     setName $user
     echo "$(jq '.users['$user'].orders |= []' customers.json)" > customers.json     # writes in new user info at the end of .users[] in json file
+}
+
+addOrder() {    # $1:userId     $2:orderNo
+    user=$1
+    orderNo=$2
+    echo "$(jq '.users['$user'].orders += ['$orderNo']' customers.json)" > customers.json    # prints email based on User ID
 }
 
 orderHistory() {
