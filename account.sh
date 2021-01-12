@@ -102,7 +102,25 @@ addUser() {     # $1:Email      $2:Name
 addOrder() {    # $1:userId     $2:orderNo
     user=$1
     orderNo=$2
-    echo "$(jq '.users['$user'].orders += ['$orderNo']' customers.json)" > customers.json    # prints email based on User ID
+    echo "$(jq '.users['$user'].orders += ['$orderNo']' customers.json)" > customers.json    # adds order based on User ID
+    echo "$(jq '.users[0].allOrders += ['$orderNo']' customers.json)" > customers.json    # adds order based on User ID
+}
+
+currentOrderNo() {
+    allOrdersLength=$(jq '.users[0].allOrders | length' customers.json)
+
+    if [[ $allOrdersLength -eq 0 ]]; then
+        lastOrder=0
+    else
+        lastOrder=$(jq '.users[0].allOrders[0]' customers.json)
+        for (( i = 0; i < allOrdersLength; i++ )); do
+            if [[ $(jq '.users[0].allOrders['$i']' customers.json) -gt $lastOrder ]]; then
+                lastOrder=$(jq '.users[0].allOrders['$i']' customers.json)
+            fi
+        done
+    fi
+    ((lastOrder++))
+    echo $lastOrder
 }
 
 orderHistory() {
@@ -140,6 +158,7 @@ accountMenu() {
         echo [3] Change Email address
         echo [4] Change Name
         echo "[5] Logout (order as guest)"
+        echo [6] Get last order
         echo
         read -p "Welcome, $name! What would you like to do? >> " option
         echo
@@ -150,6 +169,7 @@ accountMenu() {
             3) setEmail $userId; email=$(getEmail $userId); clear ;;
             4) setName $userId; name=$(getName $userId); clear ;;
             5) clear; logoutUser; return ;;
+            6) addOrder $userId $(currentOrderNo $userId);;
         esac
     done
 }
