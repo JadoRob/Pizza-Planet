@@ -49,9 +49,16 @@ calcTax() {
 displayCart() {
     echo '____________________________ YOUR CART ____________________________'
     cat cart.data | while read line; do
-        echo $line | awk -F ':' '{ printf "\n  %-55s $%s\n", $1" "$3, $4 }'
-        echo -e "    \u2022 "$(echo $line | awk -F ':' '{print $2}')
-        echo -e "    \u2022 Toppings: "$(echo $line | awk -F ':' '{for (i = 5; i < NF; i++) printf $i", "} {if (NF > 4) printf $(NF)}')
+        if [[ $(echo $line | awk -F ':' '{printf NF}') == 2 ]]; then
+            echo $line | awk -F ':' '{ printf "\n  %-55s $%s\n", $1, $2 }'
+        elif [[ $(echo $line | awk -F ':' '{printf NF}') == 3 ]]; then
+            echo $line | awk -F ':' '{ printf "\n  %-55s $%s\n", $2, $3 }'
+            echo -e "    \u2022 "$(echo $line | awk -F ':' '{print $1}')
+        else
+            echo $line | awk -F ':' '{ printf "\n  %-55s $%s\n", $1" "$3, $4 }'
+            echo -e "    \u2022 "$(echo $line | awk -F ':' '{print $2}')
+            echo -e "    \u2022 Toppings: "$(echo $line | awk -F ':' '{for (i = 5; i < NF; i++) printf $i", "} {if (NF > 4) printf $(NF)}')
+        fi
     done
     echo ___________________________________________________________________
     printf "%64s" "SUBTOTAL: \$$(calcSubtotal)"
