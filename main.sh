@@ -70,9 +70,10 @@ displayCart() {
 
 echo Welcome to Pizza Planet!
 echo
-read -p "Please enter your name >> " customer
 
-printf "\nWhat can we get you today, $customer?\n"
+if [[ $userId == 0 ]]; then read -p "Please enter your name >> " name; fi
+
+printf "\nWhat can we get you today, $name?\n"
 
 displayOptions
 
