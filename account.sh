@@ -117,6 +117,7 @@ recordOrder() {     # $1:orderNo
             (3) curOrder="0${curOrder}" ;;
     esac
 
+    mkdir -p orders
     mv cart.data orders/order_$curOrder.data
 }
 
