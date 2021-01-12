@@ -140,20 +140,25 @@ currentOrderNo() {
 orderHistory() {
 
     for order in ${orders[@]}; do
-    echo "[ORDER# $order]"
-    echo "-------------------------------------------------------------------"
-    echo
-    cat "orders/order_$order.data" | while read line; do
-        echo $line | awk -F ':' '{ printf "  %-55s $%s\n", $1" "$3, $4 }'
-        echo -e "    \u2022 "$(echo $line | awk -F ':' '{print $2}')
-        echo -e "    \u2022 Toppings: "$(echo $line | awk -F ':' '{for (i = 5; i < NF; i++) printf $i", "} {if (NF > 4) printf $(NF)}')
+        echo "[ORDER# $order]"
+        echo "-------------------------------------------------------------------"
+        cat "orders/order_$order.data" | while read line; do
+            if [[ $(echo $line | awk -F ':' '{printf NF}') == 2 ]]; then
+                echo $line | awk -F ':' '{ printf " - %-55s $%s\n", $1, $2 }'
+            elif [[ $(echo $line | awk -F ':' '{printf NF}') == 3 ]]; then
+                echo $line | awk -F ':' '{ printf " - %-55s $%s\n", $2, $3 }'
+                echo -e "    \u2022 "$(echo $line | awk -F ':' '{print $1}')
+            else
+                echo $line | awk -F ':' '{ printf " - %-55s $%s\n", $1" "$3, $4 }'
+                echo -e "    \u2022 "$(echo $line | awk -F ':' '{print $2}')
+                echo -e "    \u2022 Toppings: "$(echo $line | awk -F ':' '{for (i = 5; i < NF; i++) printf $i", "} {if (NF > 4) printf $(NF)}')
+            fi
+        done
+        echo -------------------------------------------------------------------
+        printf "\n\n"
     done
-    echo -------------------------------------------------------------------
-    printf "\n\n"
 
-    done
-
-    read -p "What would you like to do? (no function yet) >> " asdf
+    read -n 1 -s -r -p "Press any key to continue"
 }
 
 accountMenu() {
