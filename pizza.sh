@@ -35,7 +35,7 @@ showGraphic | lolcat
 function pizzaTop {
 echo "Welcome to the $pizza pizza section of our menu!"
 echo ""
-echo "Your selection of $pizza pizza comes on red sauce with toppings of:  "
+echo "Your selection of $pizza pizza comes with toppings of:  "
 if [[ $pizza == "Pepperoni" ]]
 then
 echo "Double Pepperoni and Chesse"
@@ -44,13 +44,28 @@ then
 echo "Tripple cheese of Motzorella, Cheddar, and Gorgonzolla "
 elif [[ $pizza == "Veggie" ]]
 then
-echo "Broccoli, Carrots and Cherry Tomatoes " 
+echo "Red Onions, Mushrooms and Black Olives "
 elif [[ $pizza == "Meat" ]]
 then
 echo "Pepperoni, Sausage and Bacon"
 elif [[ $pizza == "Hawaiian" ]]
 then
 echo "Pineapple, Ham and Tomato"
+elif [[ $pizza == "Buffalo Chicken" ]]
+then
+echo "Grilled Chicken, Onions and Jalapeno"
+elif [[ $pizza == "Philly Stake and Cheese" ]]
+then
+echo "Stake, Onions and Green Peppers"
+elif [[ $pizza == "Bacon Cheeseburger" ]]
+then
+echo "Bacon, Beef and Cheese"
+elif [[ $pizza == "BBQ Chicken" ]]
+then
+echo "Grilled Chicken, Bacon and Red Onions"
+elif [[ $pizza == "Supreme" ]]
+then
+echo "Pepperoni, Mushrooms and Green Bell Peppers"
 fi
 }
 
