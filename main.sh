@@ -58,8 +58,7 @@ displayCart() {
 }
 
 ########### START SCRIPT ###########
-
-> cart.data     # Clear cart
+. account.sh
 
 echo Welcome to Pizza Planet!
 echo
@@ -104,6 +103,8 @@ echo
 read -p "Confirm purchase (Y/N)? " yn
 
 if [[ $yn =~ [Yy] ]]; then
+    recordOrder $(currentOrderNo)
+    addOrder $userId $(currentOrderNo)
     printf "\nThank you for choosing Planet Pizza! You will be notified once your order is <ready/on the way>.\n"
     echo "Have a great day!"
 fi
