@@ -40,13 +40,14 @@ getOrders() {   # $1:UserID
             (curOrder >= 1 && curOrder <= 9) * 1 +   
             (curOrder >= 10 && curOrder <= 99) * 2 +
             (curOrder >= 100 && curOrder <= 999) * 3 )) in   
-                (1) curOrder="000${curOrder}" ;;
-                (2) curOrder="00${curOrder}" ;;
-                (3) curOrder="0${curOrder}" ;;
+                (1) orderList[$i]="000${curOrder}" ;;
+                (2) orderList[$i]="00${curOrder}" ;;
+                (3) orderList[$i]="0${curOrder}" ;;
         esac
-        orderList=( "${orderList[@]}" "$curOrder" )
+        # orderList=( "${orderList[@]}" "$curOrder" )
     done
-    echo "${orderList[@]}"                                                     # prints array of orders based on User ID
+    echo "${orderList[@]}"
+    # echo "${orderList[@]}"      # prints array of orders based on User ID
 }
 
 ### SET functions require User ID
@@ -82,7 +83,7 @@ loginUser() {   # $1:Email
     userId=$(getId $1)
     name=$(getName $userId)
     email=$(getEmail $userId)
-    orders=$(getOrders $userId)
+    orders=( $(getOrders $userId) )
 }
 
 logoutUser() {
@@ -100,18 +101,13 @@ addUser() {     # $1:Email      $2:Name
     echo "$(jq '.users['$user'].orders |= []' customers.json)" > customers.json     # writes in new user info at the end of .users[] in json file
 }
 
-orderHistory() {    
+orderHistory() {
 
-    echo "${orders[0]}"
-    echo "${orders[0]}"
-    echo "${orders[1]}"
-    echo "${orders[2]}"
-
-    for i in ${!orders[@]}; do
-    echo "[ORDER# ${orders[$i]}]"
+    for order in ${orders[@]}; do
+    echo "[ORDER# $order]"
     echo "-------------------------------------------------------------------"
     echo
-    cat "orders/order_${orders[$i]}.data" | while read line; do
+    cat "orders/order_$order.data" | while read line; do
         echo $line | awk -F ':' '{ printf "  %-55s $%s\n", $1" "$3, $4 }'
         echo -e "    \u2022 "$(echo $line | awk -F ':' '{print $2}')
         echo -e "    \u2022 Toppings: "$(echo $line | awk -F ':' '{for (i = 5; i < NF; i++) printf $i", "} {if (NF > 4) printf $(NF)}')
@@ -119,22 +115,24 @@ orderHistory() {
     echo -------------------------------------------------------------------
     printf "\n\n"
 
-    read -p "What would you like to do? (no function yet) >> " asdf
     done
+
+    read -p "What would you like to do? (no function yet) >> " asdf
 }
 
 accountMenu() {
     option=''
     while [[ $option != "1" ]]; do
-        clear
+        if [[ $option != 2 ]]; then clear; fi
+
         echo "User ID: $userId"
         echo "Name: $name"
         echo "Email: $email"
         echo "Orders: $orders"
-        echo
+        echo 
 
         echo [1] Order
-        echo "[2] View Order History (not yet working)"
+        echo [2] View Order History
         echo [3] Change Email address
         echo [4] Change Name
         echo "[5] Logout (order as guest)"
