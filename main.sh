@@ -65,6 +65,7 @@ displayCart() {
 }
 
 ########### START SCRIPT ###########
+./dependencies.sh   # checks for and installs required commands
 . account.sh
 
 echo Welcome to Pizza Planet!
