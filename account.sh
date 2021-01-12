@@ -106,6 +106,20 @@ addOrder() {    # $1:userId     $2:orderNo
     echo "$(jq '.users[0].allOrders += ['$orderNo']' customers.json)" > customers.json    # adds order based on User ID
 }
 
+recordOrder() {     # $1:orderNo
+    curOrder=$(currentOrderNo)
+    case $((
+        (curOrder >= 1 && curOrder <= 9) * 1 +
+        (curOrder >= 10 && curOrder <= 99) * 2 +
+        (curOrder >= 100 && curOrder <= 999) * 3 )) in
+            (1) curOrder="000${curOrder}" ;;
+            (2) curOrder="00${curOrder}" ;;
+            (3) curOrder="0${curOrder}" ;;
+    esac
+
+    mv cart.data orders/order_$curOrder.data
+}
+
 currentOrderNo() {
     allOrdersLength=$(jq '.users[0].allOrders | length' customers.json)
 
@@ -158,7 +172,6 @@ accountMenu() {
         echo [3] Change Email address
         echo [4] Change Name
         echo "[5] Logout (order as guest)"
-        echo [6] Get last order
         echo
         read -p "Welcome, $name! What would you like to do? >> " option
         echo
@@ -169,7 +182,6 @@ accountMenu() {
             3) setEmail $userId; email=$(getEmail $userId); clear ;;
             4) setName $userId; name=$(getName $userId); clear ;;
             5) clear; logoutUser; return ;;
-            6) addOrder $userId $(currentOrderNo $userId);;
         esac
     done
 }
