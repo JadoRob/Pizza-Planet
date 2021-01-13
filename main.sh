@@ -50,10 +50,17 @@ selectOption() {
 calcSubtotal() {   # Calculates total in cart.data
     subTotal=0
 
-    for i in `cut -d ':' -f 4 cart.data`; do
-        i=`echo $i | sed "s/\"//g"`
+    while read line; do
+        if [[ $(echo $line | awk -F ':' '{printf NF}') == 2 ]]; then
+            i=$(echo $line | awk -F ':' '{ printf "%s", $2 }')
+        elif [[ $(echo $line | awk -F ':' '{printf NF}') == 3 ]]; then
+            i=$(echo $line | awk -F ':' '{ printf "%s", $3 }')
+        else
+            i=$(echo $line | awk -F ':' '{ printf "%s", $4 }')
+        fi
+
         subTotal=$(bc <<< "$subTotal + $i")
-    done
+    done < cart.data
 
     echo $subTotal
 }
