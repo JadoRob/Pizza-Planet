@@ -93,7 +93,7 @@ logoutUser() {
 
 addUser() {     # $1:Email      $2:Name
     user=$(jq '.users | length' customers.json)
-    setEmail $user
+    setEmail $user $1
     echo
     setName $user
     echo "$(jq '.users['$user'].orders |= []' customers.json)" > customers.json     # writes in new user info at the end of .users[] in json file
@@ -208,7 +208,7 @@ else
     echo -e "No matches for $emailInp. Create account?\n"
     read -p "Enter [1] to create account. Enter [2] for guest checkout >> " inp
     if [[ inp -eq 1 ]]; then
-        addUser
+        addUser $emailInp
         newUserId=$(( $(jq '.users | length' customers.json) - 1 )) # new user is at the end of json array (.users[].length - 1)
         newEmail=$(getEmail $newUserId)
         loginUser $newEmail
