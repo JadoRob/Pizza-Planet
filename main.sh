@@ -4,6 +4,7 @@
 choices=("Premade Pizza" "Custom Pizza" "Other" "Drinks")
 doneShopping=false
 deliveryFee=0.00
+deliveryStatus="ready"
 
 ########### FUNCTIONS ###########
 showGraphic() {
@@ -121,7 +122,10 @@ done
 
 read -p "Press 1 for carryout, 2 for delivery >> " orderType
 
-if [[ $((orderType)) == 2 ]]; then deliveryFee=5.00; fi
+if [[ $((orderType)) == 2 ]]; then
+    deliveryFee=5.00
+    deliveryStatus="on the way"
+fi
 
 # Calculate totals & tax
 subTotal=$(calcSubtotal)
@@ -142,6 +146,6 @@ read -p "Confirm purchase (Y/N)? " yn
 if [[ $yn =~ [Yy] ]]; then
     recordOrder $(currentOrderNo)
     addOrder $userId $(currentOrderNo)
-    printf "\nThank you for choosing Planet Pizza! You will be notified once your order is <ready/on the way>.\n"
+    printf "\nThank you for choosing Planet Pizza! You will be notified once your order is $deliveryStatus.\n"
     echo "Have a great day!"
 fi
