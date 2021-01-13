@@ -5,7 +5,7 @@ clear
 counter=1
 pizza=Custom\ Pizza
 small=9.99; medium=11.99; large=14.99
-toppings=("Parmesan Cheese" Ham "Motzorella Cheese" Broccoli Bacon Pepperoni Sausage Pineapple Tomato "Green Peppers" Jalapeno Onions Chicken "Red Peppers")
+toppings=("Parmesan Cheese" Ham "Motzorella Cheese" Broccoli Bacon Pepperoni Sausage Pineapple Tomato "Green Peppers" Jalapeno Mushrooms "Grilled Chicken" "Red Peppers" "Cheddar Cheese" "Gorgonzolla Cheese" "Red Onions" "Black Olives" Stake Beef "Green Bell Peppers")
 
 function showGraphic() {
 	echo "                                          _.oo."
@@ -90,6 +90,27 @@ sel1=${toppings[12]}
 elif (($sel1 == 14 ));
 then
 sel1=${toppings[13]}
+elif (($sel1 == 15 ));
+then
+sel1=${toppings[14]}
+elif (($sel1 == 16 ));
+then
+sel1=${toppings[15]}
+elif (($sel1 == 17 ));
+then
+sel1=${toppings[16]}
+elif (($sel1 == 18 ));
+then
+sel1=${toppings[17]}
+elif (($sel1 == 19 ));
+then
+sel1=${toppings[18]}
+elif (($sel1 == 20 ));
+then
+sel1=${toppings[19]}
+elif (($sel1 == 21 ));
+then
+sel1=${toppings[20]}
 fi
 
 read -p "Please choose your second topping to add for your pizza >> " sel2
@@ -136,6 +157,27 @@ sel2=${toppings[12]}
 elif (($sel2 == 14 ));
 then
 sel2=${toppings[13]}
+elif (($sel2 == 15 ));
+then
+sel2=${toppings[14]}
+elif (($sel2 == 16 ));
+then
+sel2=${toppings[15]}
+elif (($sel2 == 17 ));
+then
+sel2=${toppings[16]}
+elif (($sel2 == 18 ));
+then
+sel2=${toppings[17]}
+elif (($sel2 == 19 ));
+then
+sel2=${toppings[18]}
+elif (($sel2 == 20 ));
+then
+sel2=${toppings[19]}
+elif (($sel2 == 21 ));
+then
+sel2=${toppings[20]}
 fi
 
 read -p "Please choose your third topping to add for your pizza >> " sel3
@@ -182,10 +224,31 @@ sel3=${toppings[12]}
 elif (($sel3 == 14 ));
 then
 sel3=${toppings[13]}
+elif (($sel3 == 15 ));
+then
+sel3=${toppings[14]}
+elif (($sel3 == 16 ));
+then
+sel3=${toppings[15]}
+elif (($sel3 == 17 ));
+then
+sel3=${toppings[16]}
+elif (($sel3 == 18 ));
+then
+sel3=${toppings[17]}
+elif (($sel3 == 19 ));
+then
+sel3=${toppings[18]}
+elif (($sel3 == 20 ));
+then
+sel3=${toppings[19]}
+elif (($sel3 == 21 ));
+then
+sel3=${toppings[20]}
 fi
 
 echo ""
-echo "Your three toppings were $sel1, $sel2, $sel3 on your custom pizza. "
+echo "Your three toppings were $sel1, $sel2, and  $sel3 on your custom pizza. "
 echo ""
 
 
@@ -241,7 +304,7 @@ showOptions
 getOrder
 
 while true; do
-read -p "Add a $size $crust $pizza with $sel1, $sel2, $sel3 for $price to your order? [y/n] >> " yn
+read -p "Add a $size $crust $pizza with $sel1, $sel2, and  $sel3 for $price to your order? [y/n] >> " yn
 case $yn in
 [Yy]* ) echo "Thank you, your order has been added to the cart!!"; break;;
 [Nn]* ) echo "Sorry for the confusion lets begin again."; sleep 2 ;./custom.sh; break;;
