@@ -4,9 +4,31 @@
 choices=("Premade Pizza" "Custom Pizza" "Other" "Drinks")
 doneShopping=false
 deliveryFee=0.00
+deliveryStatus="ready"
 
 ########### FUNCTIONS ###########
+showGraphic() {
+	echo "                                          _.oo."
+	echo "                   _.u[[/;:,.         .odMMMMMM'"
+	echo "                 .o888UU[[[/;:-.  .o@P^    MMM^"
+	echo "                oN88888UU[[[/;::-.        dP^"
+	echo "               dNMMNN888UU[[[/;::-.   .o@P^"
+	echo "              ,MMMMMMN888UU[[/;::-. o@^"
+	echo "              NNMMMNN888UU[[[/~.o@P^"
+	echo "              888888888UU[[[/o@^-.."
+	echo "             oI8888uu[[[/o@P^:--.."
+	echo "          .@^  YUU[[[/o@^;::---.."
+	echo "        oMP     ^/o@P^;:::---.."
+	echo "     .dMMM    .o@^ ^;::---..."
+	echo "    dMMMMMMM@^ `      `^^^^"
+	echo "   YMMMUP^"
+	echo "    ^^"
+	figlet "Pizza Planet"
+	echo
+}
+
 displayOptions() {  # Displays menu items
+    printf "What can we get you today, $name?\n"
     echo --------------------------------------------
     for i in ${!choices[@]}; do
         echo $(($i+1))\) ${choices[$i]}
@@ -17,7 +39,7 @@ displayOptions() {  # Displays menu items
 }
 
 selectOption() {
-    read -p "[1-4] >> " option
+    menuValidation 1 4 "[1-4]"
     
     case $option in
         1) ./menu.sh ;;
@@ -30,10 +52,17 @@ selectOption() {
 calcSubtotal() {   # Calculates total in cart.data
     subTotal=0
 
-    for i in `cut -d ':' -f 4 cart.data`; do
-        i=`echo $i | sed "s/\"//g"`
+    while read line; do
+        if [[ $(echo $line | awk -F ':' '{printf NF}') == 2 ]]; then
+            i=$(echo $line | awk -F ':' '{ printf "%s", $2 }')
+        elif [[ $(echo $line | awk -F ':' '{printf NF}') == 3 ]]; then
+            i=$(echo $line | awk -F ':' '{ printf "%s", $3 }')
+        else
+            i=$(echo $line | awk -F ':' '{ printf "%s", $4 }')
+        fi
+
         subTotal=$(bc <<< "$subTotal + $i")
-    done
+    done < cart.data
 
     echo $subTotal
 }
@@ -49,61 +78,108 @@ calcTax() {
 displayCart() {
     echo '____________________________ YOUR CART ____________________________'
     cat cart.data | while read line; do
-        echo $line | awk -F ':' '{ printf "\n  %-55s $%s\n", $1" "$3, $4 }'
-        echo -e "    \u2022 "$(echo $line | awk -F ':' '{print $2}')
-        echo -e "    \u2022 Toppings: "$(echo $line | awk -F ':' '{for (i = 5; i < NF; i++) printf $i", "} {if (NF > 4) printf $(NF)}')
+        if [[ $(echo $line | awk -F ':' '{printf NF}') == 2 ]]; then
+            echo $line | awk -F ':' '{ printf "\n  %-55s $%s\n", $1, $2 }'
+        elif [[ $(echo $line | awk -F ':' '{printf NF}') == 3 ]]; then
+            echo $line | awk -F ':' '{ printf "\n  %-55s $%s\n", $2, $3 }'
+            echo -e "    \u2022 "$(echo $line | awk -F ':' '{print $1}')
+        else
+            echo $line | awk -F ':' '{ printf "\n  %-55s $%s\n", $1" "$3, $4 }'
+            echo -e "    \u2022 "$(echo $line | awk -F ':' '{print $2}')
+            echo -e "    \u2022 Toppings: "$(echo $line | awk -F ':' '{for (i = 5; i < NF; i++) printf $i", "} {if (NF > 4) printf $(NF)}')
+        fi
     done
     echo ___________________________________________________________________
     printf "%64s" "SUBTOTAL: \$$(calcSubtotal)"
 }
 
+emptyCart() {
+    if [[ ! -f cart.data || -z $(grep '[^[:space:]]' cart.data) ]]; then
+        echo true
+    else
+        echo false
+    fi
+}
+
+deliveryPrompt() {
+    menuValidation 1 2 "Enter [1] for Carryout, [2] for Delivery" "Invalid input. Please enter [1] for Carryout or [2] for Delivery"
+    orderType=$option
+
+    if [[ $((orderType)) == 2 ]]; then
+        deliveryFee=5.00
+        deliveryStatus="on the way"
+    fi
+}
+
+customerCart() {
+    # Order additional items
+    while [ $doneShopping = false ]; do
+        clear
+        if [[ $(emptyCart) == true ]]; then
+            echo "Cart is empty. Returning to main menu..."
+            sleep 1
+            clear
+            displayOptions
+        else
+            displayCart
+            read -p $'\nWould you like to add anything else (Y/N)? >> ' yn
+            if [[ $yn =~ [Yy] ]]; then
+                printf "\nWhat would you like to add?\n"
+                displayOptions
+            else
+                doneShopping=true
+                echo
+            fi
+        fi
+    done
+}
+
+checkout() {
+    deliveryPrompt
+
+    # Calculate totals & tax
+    subTotal=$(calcSubtotal)
+    tax=$(calcTax)
+    grandTotal=$(bc <<< $tax+$subTotal+$deliveryFee)
+
+    printf "\nLooks great, your total before tax comes to \$$subTotal\n\n"
+
+    # Display totals
+    echo "     Subtotal: \$$subTotal"
+    echo " Delivery Fee:  \$$deliveryFee"
+    echo "Estimated Tax:  \$$tax"
+    echo "   GrandTotal: \$$grandTotal"
+    echo
+
+    read -p "Confirm purchase (Y/N)? " yn
+
+    if [[ $yn =~ [Yy] ]]; then
+        printf "\nThank you for choosing Planet Pizza! You will be notified once your order is $deliveryStatus.\n"
+        recordOrder $(currentOrderNo)
+        addOrder $userId $(currentOrderNo)
+        echo "Have a great day!"
+    fi
+}
+
 ########### START SCRIPT ###########
+./dependencies.sh   # checks for and installs required commands
 
-> cart.data     # Clear cart
-
+showGraphic | lolcat
 echo Welcome to Pizza Planet!
 echo
-read -p "Please enter your name >> " customer
+. account.sh
 
-printf "\nWhat can we get you today, $customer?\n"
+# For guest users
+if [[ $userId == 0 ]]; then
+    clear
+    showGraphic | lolcat
+    printf "Welcome to Pizza Planet!\n\n"
+    read -p "Please enter your name >> " name
+    clear
+fi
 
 displayOptions
 
-# Order additional items
-while [ $doneShopping = false ]; do
-    clear
-    displayCart
-    read -p $'\nWould you like to add anything else (Y/N)? >> ' yn
-    if [[ $yn =~ [Yy] ]]; then
-        printf "\nWhat would you like to add?\n"
-        displayOptions
-    else
-        doneShopping=true
-        echo
-    fi
-done
+customerCart
 
-read -p "Press 1 for carryout, 2 for delivery >> " orderType
-
-if [[ $((orderType)) == 2 ]]; then deliveryFee=5.00; fi
-
-# Calculate totals & tax
-subTotal=$(calcSubtotal)
-tax=$(calcTax)
-grandTotal=$(bc <<< $tax+$subTotal+$deliveryFee)
-
-printf "\nLooks great, your total before tax comes to \$$subTotal\n\n"
-
-# Display totals
-echo "     Subtotal: \$$subTotal"
-echo " Delivery Fee:  \$$deliveryFee"
-echo "Estimated Tax:  \$$tax"
-echo "   GrandTotal: \$$grandTotal"
-echo
-
-read -p "Confirm purchase (Y/N)? " yn
-
-if [[ $yn =~ [Yy] ]]; then
-    printf "\nThank you for choosing Planet Pizza! You will be notified once your order is <ready/on the way>.\n"
-    echo "Have a great day!"
-fi
+checkout
