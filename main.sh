@@ -28,6 +28,7 @@ showGraphic() {
 }
 
 displayOptions() {  # Displays menu items
+    printf "What can we get you today, $name?\n"
     echo --------------------------------------------
     for i in ${!choices[@]}; do
         echo $(($i+1))\) ${choices[$i]}
@@ -92,6 +93,14 @@ displayCart() {
     printf "%64s" "SUBTOTAL: \$$(calcSubtotal)"
 }
 
+emptyCart() {
+    if [[ ! -f cart.data || -z $(grep '[^[:space:]]' cart.data) ]]; then
+        echo true
+    else
+        echo false
+    fi
+}
+
 deliveryPrompt() {
     menuValidation 1 2 "Enter [1] for Carryout, [2] for Delivery" "Invalid input. Please enter [1] for Carryout or [2] for Delivery"
     orderType=$option
@@ -115,23 +124,32 @@ echo Welcome to Pizza Planet!
 echo
 . account.sh
 
-if [[ $userId == 0 ]]; then printf "\n"; read -p "Please enter your name >> " name; fi
-
-printf "\nWhat can we get you today, $name?\n"
+if [[ $userId == 0 ]]; then
+    clear
+    read -p "Please enter your name >> " name
+    clear
+fi
 
 displayOptions
 
 # Order additional items
 while [ $doneShopping = false ]; do
     clear
-    displayCart
-    read -p $'\nWould you like to add anything else (Y/N)? >> ' yn
-    if [[ $yn =~ [Yy] ]]; then
-        printf "\nWhat would you like to add?\n"
+    if [[ $(emptyCart) == true ]]; then
+        echo "Cart is empty. Returning to main menu..."
+        sleep 1
+        clear
         displayOptions
     else
-        doneShopping=true
-        echo
+        displayCart
+        read -p $'\nWould you like to add anything else (Y/N)? >> ' yn
+        if [[ $yn =~ [Yy] ]]; then
+            printf "\nWhat would you like to add?\n"
+            displayOptions
+        else
+            doneShopping=true
+            echo
+        fi
     fi
 done
 
@@ -154,8 +172,8 @@ echo
 read -p "Confirm purchase (Y/N)? " yn
 
 if [[ $yn =~ [Yy] ]]; then
+    printf "\nThank you for choosing Planet Pizza! You will be notified once your order is $deliveryStatus.\n"
     recordOrder $(currentOrderNo)
     addOrder $userId $(currentOrderNo)
-    printf "\nThank you for choosing Planet Pizza! You will be notified once your order is $deliveryStatus.\n"
     echo "Have a great day!"
 fi
