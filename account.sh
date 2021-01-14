@@ -211,7 +211,7 @@ askEmail() {    # $1:Message
         message=$1
     fi
     while [[ ! $(validEmail $emailInp) ]]; do
-        clear
+        if [[ userId -ne 0 ]]; then clear; fi
         read -p "$message >> " emailInp
         if [[ ! $(validEmail $emailInp) ]]; then
             echo -e "\nInvalid email. Please try again."
@@ -234,7 +234,7 @@ if [[ $(getId $emailInp) ]]; then
     loginUser $emailInp
     accountMenu
 else
-    echo -e "No matches for $emailInp. Create account?\n"
+    echo -e "\nNo matches for $emailInp. Create account?\n"
     read -p "Enter [1] to create account. Enter [2] for guest checkout >> " inp
     if [[ inp -eq 1 ]]; then
         addUser $emailInp

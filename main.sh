@@ -94,11 +94,11 @@ displayCart() {
 
 ########### START SCRIPT ###########
 ./dependencies.sh   # checks for and installs required commands
-. account.sh
 
 showGraphic | lolcat
 echo Welcome to Pizza Planet!
 echo
+. account.sh
 
 if [[ $userId == 0 ]]; then read -p "Please enter your name >> " name; fi
 
