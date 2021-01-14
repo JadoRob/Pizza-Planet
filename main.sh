@@ -116,6 +116,56 @@ deliveryPrompt() {
     fi
 }
 
+customerCart() {
+    # Order additional items
+    while [ $doneShopping = false ]; do
+        clear
+        if [[ $(emptyCart) == true ]]; then
+            echo "Cart is empty. Returning to main menu..."
+            sleep 1
+            clear
+            displayOptions
+        else
+            displayCart
+            read -p $'\nWould you like to add anything else (Y/N)? >> ' yn
+            if [[ $yn =~ [Yy] ]]; then
+                printf "\nWhat would you like to add?\n"
+                displayOptions
+            else
+                doneShopping=true
+                echo
+            fi
+        fi
+    done
+}
+
+checkout() {
+    deliveryPrompt
+
+    # Calculate totals & tax
+    subTotal=$(calcSubtotal)
+    tax=$(calcTax)
+    grandTotal=$(bc <<< $tax+$subTotal+$deliveryFee)
+
+    printf "\nLooks great, your total before tax comes to \$$subTotal\n\n"
+
+    # Display totals
+    echo "     Subtotal: \$$subTotal"
+    echo " Delivery Fee:  \$$deliveryFee"
+    echo "Estimated Tax:  \$$tax"
+    echo "   GrandTotal: \$$grandTotal"
+    echo
+
+    read -p "Confirm purchase (Y/N)? " yn
+
+    if [[ $yn =~ [Yy] ]]; then
+        printf "\nThank you for choosing Planet Pizza! You will be notified once your order is $deliveryStatus.\n"
+        recordOrder $(currentOrderNo)
+        addOrder $userId $(currentOrderNo)
+        echo "Have a great day!"
+    fi
+}
+
 ########### START SCRIPT ###########
 ./dependencies.sh   # checks for and installs required commands
 
@@ -124,56 +174,17 @@ echo Welcome to Pizza Planet!
 echo
 . account.sh
 
+# For guest users
 if [[ $userId == 0 ]]; then
     clear
+    showGraphic | lolcat
+    printf "Welcome to Pizza Planet!\n\n"
     read -p "Please enter your name >> " name
     clear
 fi
 
 displayOptions
 
-# Order additional items
-while [ $doneShopping = false ]; do
-    clear
-    if [[ $(emptyCart) == true ]]; then
-        echo "Cart is empty. Returning to main menu..."
-        sleep 1
-        clear
-        displayOptions
-    else
-        displayCart
-        read -p $'\nWould you like to add anything else (Y/N)? >> ' yn
-        if [[ $yn =~ [Yy] ]]; then
-            printf "\nWhat would you like to add?\n"
-            displayOptions
-        else
-            doneShopping=true
-            echo
-        fi
-    fi
-done
+customerCart
 
-deliveryPrompt
-
-# Calculate totals & tax
-subTotal=$(calcSubtotal)
-tax=$(calcTax)
-grandTotal=$(bc <<< $tax+$subTotal+$deliveryFee)
-
-printf "\nLooks great, your total before tax comes to \$$subTotal\n\n"
-
-# Display totals
-echo "     Subtotal: \$$subTotal"
-echo " Delivery Fee:  \$$deliveryFee"
-echo "Estimated Tax:  \$$tax"
-echo "   GrandTotal: \$$grandTotal"
-echo
-
-read -p "Confirm purchase (Y/N)? " yn
-
-if [[ $yn =~ [Yy] ]]; then
-    printf "\nThank you for choosing Planet Pizza! You will be notified once your order is $deliveryStatus.\n"
-    recordOrder $(currentOrderNo)
-    addOrder $userId $(currentOrderNo)
-    echo "Have a great day!"
-fi
+checkout
