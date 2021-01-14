@@ -53,14 +53,14 @@ getOrders() {   # $1:UserID
 setEmail() {    # $1:UserID     $2:Email
     user=$1
     if [[ -z "$2" ]]; then
-        read -p "Email Address >> " newEmail
+        askEmail
     else
-        newEmail=$2
+        emailInp=$2
     fi
 
-    newEmail=$(toLowercase $newEmail)
+    emailInp=$(toLowercase $emailInp)
 
-    echo "$(jq '.users['$user'].email |= "'$newEmail'"' customers.json)" > customers.json   # change email in json file
+    echo "$(jq '.users['$user'].email |= "'$emailInp'"' customers.json)" > customers.json   # change email in json file
     
 }
 
@@ -192,12 +192,41 @@ accountMenu() {
     done
 }
 
+validEmail() {   # $1:Email
+    if [[ -z $1 ]]; then
+        return 0
+    fi
+    if [[ $1 =~ [A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4} ]]; then
+        echo true
+    else
+        return 0
+    fi
+}
+
+askEmail() {    # $1:Message
+    emailInp=""
+    if [[ -z $1 ]]; then
+        message="Email Address"
+    else
+        message=$1
+    fi
+    while [[ ! $(validEmail $emailInp) ]]; do
+        clear
+        read -p "$message >> " emailInp
+        if [[ ! $(validEmail $emailInp) ]]; then
+            echo -e "\nInvalid email. Please try again."
+            sleep 1
+        fi
+    done
+}
+
 toLowercase() {     # $1:<string>
     echo $(echo $1 | tr '[A-Z]' '[a-z]')
 }
 
 ########### START SCRIPT ###########
-read -p "Please enter your email address >> " emailInp
+
+askEmail "Please enter your email address"
 
 emailInp=$(toLowercase $emailInp)
 
