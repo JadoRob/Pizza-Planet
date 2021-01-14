@@ -174,7 +174,6 @@ menuValidation() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
         read -p "$prompt >> " option
         if [[ $option -lt $1 || $option -gt $2 ]]; then
             echo
-            # echo "Invalid input. Please enter a number between [$1-$2]"
             echo $errorMessage
             sleep 2
             printf "\e[1A\e[0K"
@@ -192,11 +191,7 @@ accountMenu() {
         echo "User ID: $userId"
         echo "Name: $name"
         echo "Email: $email"
-        echo "Orders: [ $orders ]"
-        for order in ${orders[@]}; do
-            printf "[ORDER# $order]"
-        done
-
+        echo
         echo [1] Order
         echo [2] View Order History
         echo [3] Change Email address
