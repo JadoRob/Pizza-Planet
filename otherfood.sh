@@ -61,14 +61,32 @@ do
 	clear
 	showGraphic | lolcat
 	showMenu
-	read -p "What kind of food are you hungry for?: " foodType
+	while true; do
+		read -p "What kind of food are you hungry for?: " foodType
+		[[ $foodType =~ ^[0-9]+$ ]] || { echo "Please enter a valid number: "; echo; continue; }
+		if (($foodType >= 0 && $foodType <= 3)); then
+			break
+		else
+			echo "Please choose a number listed above: "
+			echo
+		fi
+	done
 	if (($foodType==0)); then
 		echo "Returning to Main Menu..."
 		sleep 3
 		exit
 	fi
 	showSubmenu $foodType
-	read -p "What would you like?: " choice
+	while true; do
+		read -p "What would you like?: " choice
+		[[ $choice =~ ^[0-9]+$ ]] || { echo "Please enter a valid number: "; echo; continue; }
+		if (($choice >= 1 && $choice <= 3)); then
+			break
+		else
+			echo "Please choose a number listed above: "
+			echo 
+		fi
+	done
 	#Stores the line defined in $choice from the data file ($file)
 	product=$(awk -v var="$choice" '{if(NR==var) print $0}' $file)
 	item=$(echo "$product" | cut -d ":" -f1)
