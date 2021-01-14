@@ -41,14 +41,19 @@ function showMenu() {
 	echo
 }
 
+function setCurrentSubmenu() {
+	file=$1
+	totalItems=$(wc -l $file | cut -d " " -f 1)
+}
+
 function showSubmenu() {
 	echo "Here's our selection: "
 	echo
 	#show items in the sub menu and save the food type with .data to $file
 	case $1 in
-		1) awk -F: '{print NR". " $1}' wings.data; file="wings.data";;
-		2) awk -F: '{print NR". " $1}' sides.data; file="sides.data";;
-		3) awk -F: '{print NR". " $1}' pasta.data; file="pasta.data";;
+		1) awk -F: '{print NR". " $1}' wings.data; setCurrentSubmenu "wings.data";;
+		2) awk -F: '{print NR". " $1}' sides.data; setCurrentSubmenu "sides.data";;
+		3) awk -F: '{print NR". " $1}' pasta.data; setCurrentSubmenu "pasta.data";;
 	esac
 	echo
 }
@@ -80,7 +85,7 @@ do
 	while true; do
 		read -p "What would you like?: " choice
 		[[ $choice =~ ^[0-9]+$ ]] || { echo "Please enter a valid number: "; echo; continue; }
-		if (($choice >= 1 && $choice <= 3)); then
+		if (($choice >= 1 && $choice <= $totalItems)); then
 			break
 		else
 			echo "Please choose a number listed above: "
