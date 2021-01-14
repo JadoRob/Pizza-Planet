@@ -170,9 +170,9 @@ menuValidation() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
     errorMessage="Invalid input. Please enter a number between [$1-$2]"
     if [[ -n $4 ]]; then errorMessage="$4"; fi
     
-    while [[ ! ($option -ge $1 && $option -le $2) ]]; do
+    while [[ ! ($option -ge $min && $option -le $max) ]]; do
         read -p "$prompt >> " option
-        if [[ $option -lt $1 || $option -gt $2 ]]; then
+        if [[ $option -lt $min || $option -gt $max ]]; then
             echo
             echo $errorMessage
             sleep 2
