@@ -159,7 +159,29 @@ orderHistory() {
         printf "\n\n"
     done
 
-    read -n 1 -s -r -p "Press any key to continue"
+    read -n 1 -s -r -p "Press any key to continue >> "
+}
+
+menuValidation() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
+    option=""   # reset reusable variable
+    min=$1
+    max=$2
+    prompt=$3
+    errorMessage="Invalid input. Please enter a number between [$1-$2]"
+    if [[ -n $4 ]]; then errorMessage="$4"; fi
+    
+    while [[ ! ($option -ge $1 && $option -le $2) ]]; do
+        read -p "$prompt >> " option
+        if [[ $option -lt $1 || $option -gt $2 ]]; then
+            echo
+            # echo "Invalid input. Please enter a number between [$1-$2]"
+            echo $errorMessage
+            sleep 2
+            printf "\e[1A\e[0K"
+            printf "\e[1A\e[0K"
+            printf "\e[1A\e[0K"
+        fi
+    done
 }
 
 accountMenu() {
@@ -170,8 +192,10 @@ accountMenu() {
         echo "User ID: $userId"
         echo "Name: $name"
         echo "Email: $email"
-        echo "Orders: $orders"
-        echo 
+        echo "Orders: [ $orders ]"
+        for order in ${orders[@]}; do
+            printf "[ORDER# $order]"
+        done
 
         echo [1] Order
         echo [2] View Order History
@@ -179,14 +203,14 @@ accountMenu() {
         echo [4] Change Name
         echo "[5] Logout (order as guest)"
         echo
-        read -p "Welcome, $name! What would you like to do? >> " option
+        menuValidation 1 5 "Welcome, $name! What would you like to do?"
         echo
 
         case $option in
             1) clear; return ;;
-            2) clear; orderHistory ;;
-            3) setEmail $userId; email=$(getEmail $userId); clear ;;
-            4) setName $userId; name=$(getName $userId); clear ;;
+            2) clear; orderHistory; accountMenu ;;
+            3) setEmail $userId; email=$(getEmail $userId); clear; accountMenu ;;
+            4) setName $userId; name=$(getName $userId); clear; accountMenu ;;
             5) clear; logoutUser; return ;;
         esac
     done
@@ -216,6 +240,9 @@ askEmail() {    # $1:Message
         if [[ ! $(validEmail $emailInp) ]]; then
             echo -e "\nInvalid email. Please try again."
             sleep 1
+            printf "\e[1A\e[0K"
+            printf "\e[1A\e[0K"
+            printf "\e[1A\e[0K"
         fi
     done
 }

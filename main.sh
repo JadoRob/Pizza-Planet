@@ -38,7 +38,7 @@ displayOptions() {  # Displays menu items
 }
 
 selectOption() {
-    read -p "[1-4] >> " option
+    menuValidation 1 4 "[1-4]"
     
     case $option in
         1) ./menu.sh ;;
@@ -92,6 +92,21 @@ displayCart() {
     printf "%64s" "SUBTOTAL: \$$(calcSubtotal)"
 }
 
+deliveryPrompt() {
+    menuValidation 1 2 "Enter [1] for Carryout, [2] for Delivery" "Invalid input. Please enter [1] for Carryout or [2] for Delivery"
+    orderType=$option
+
+    if [[ $((orderType)) == 2 ]]; then
+        deliveryFee=5.00
+        deliveryStatus="on the way"
+    elif [[ $((orderType)) != 1 ]]; then
+        printf "Invalid input. Please enter [1] for carryout or [2] for delivery"
+        sleep 2
+        clear
+        deliveryPrompt
+    fi
+}
+
 ########### START SCRIPT ###########
 ./dependencies.sh   # checks for and installs required commands
 
@@ -100,7 +115,7 @@ echo Welcome to Pizza Planet!
 echo
 . account.sh
 
-if [[ $userId == 0 ]]; then read -p "Please enter your name >> " name; fi
+if [[ $userId == 0 ]]; then printf "\n"; read -p "Please enter your name >> " name; fi
 
 printf "\nWhat can we get you today, $name?\n"
 
@@ -120,12 +135,7 @@ while [ $doneShopping = false ]; do
     fi
 done
 
-read -p "Press 1 for carryout, 2 for delivery >> " orderType
-
-if [[ $((orderType)) == 2 ]]; then
-    deliveryFee=5.00
-    deliveryStatus="on the way"
-fi
+deliveryPrompt
 
 # Calculate totals & tax
 subTotal=$(calcSubtotal)
