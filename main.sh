@@ -108,11 +108,6 @@ deliveryPrompt() {
     if [[ $((orderType)) == 2 ]]; then
         deliveryFee=5.00
         deliveryStatus="on the way"
-    elif [[ $((orderType)) != 1 ]]; then
-        printf "Invalid input. Please enter [1] for carryout or [2] for delivery"
-        sleep 2
-        clear
-        deliveryPrompt
     fi
 }
 
