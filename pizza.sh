@@ -82,7 +82,7 @@ echo "3. Large                  6. Stuffed Crust"
 echo "0. Back to Main Menu"
 echo ""
 }
-function getOrder {
+function getSize {
 echo "What size $pizza pizza would you like? [1-3] >> "
 read option
 if (($option == 1))
@@ -100,7 +100,13 @@ price=$large
 elif (($option == 0))
 then
 exit
+elif (($option != 0 , 1 , 2 , 3))
+then
+echo "Sorry your selction was not valid please select another number"
+getSize
 fi
+}
+function getCrust {
 echo "What kind of crust would you like this $pizza pizza to have? [4-6] >> "
 read option
 if (($option == 4 ))
@@ -115,12 +121,18 @@ crust="Stuffed Crust"
 elif (($option == 0))
 then
 exit
+elif (($option != 0 , 4 , 5 , 6))
+then
+echo "Sorry your selction was not valid please select another number"
+getCrust
 fi
 }
+
 until [ "$question" == "y" ]
 do
 showOptions
-getOrder
+getSize
+getCrust
 echo "Add a $size $crust $pizza for $price to your order? [y/n] >> "
 read question
 done

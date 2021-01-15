@@ -264,7 +264,7 @@ echo "0. Back to Main Menu"
 echo ""
 }
 
-function getOrder {
+function getSize {
 echo "What size $pizza would you like? [1-3] >> "
 read option
 if (($option == 1))
@@ -282,7 +282,13 @@ price=$large
 elif (($option == 0))
 then
 exit
+elif (($option != 0 , 1 , 2 , 3))
+then
+echo "Sorry your selction was not valid please select another number"
+getSize
 fi
+}
+function getCrust {
 echo "What kind of crust would you like this $pizza to have? [4-6] >> "
 read option
 if (($option == 4 ))
@@ -297,11 +303,16 @@ crust="Stuffed Crust"
 elif (($option == 0))
 then
 exit
+elif (($option != 0 , 4 , 5 , 6))
+then
+echo "Sorry your selction was not valid please select another number"
+getCrust
 fi
 }
 
 showOptions
-getOrder
+getSize
+getCrust
 
 while true; do
 read -p "Add a $size $crust $pizza with $sel1, $sel2, and  $sel3 for $price to your order? [y/n] >> " yn
