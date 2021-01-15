@@ -89,6 +89,7 @@ logoutUser() {
     name=""
     email=""
     orders=()
+    return
 }
 
 addUser() {     # $1:Email      $2:Name
@@ -203,9 +204,9 @@ accountMenu() {
 
         case $option in
             1) clear; return ;;
-            2) clear; orderHistory; accountMenu ;;
-            3) setEmail $userId; email=$(getEmail $userId); clear; accountMenu ;;
-            4) setName $userId; name=$(getName $userId); clear; accountMenu ;;
+            2) clear; orderHistory; clear ;;
+            3) setEmail $userId; email=$(getEmail $userId) ;;
+            4) setName $userId; name=$(getName $userId) ;;
             5) clear; logoutUser; return ;;
         esac
     done
