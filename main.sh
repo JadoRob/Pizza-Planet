@@ -2,7 +2,7 @@
 
 ################ MENU FUNCTIONS ################
 welcome() {
-    show_graphic | lolcat
+    show_graphic | lolcat -a -d 8 
     echo Welcome to Pizza Planet!
     echo
     echo [1] Login/Register.
@@ -11,17 +11,17 @@ welcome() {
         valid_menu_prompt 1 2 "[1-2]"
         echo
         if [[ $option == 1 ]]; then
-            clear
+            clear_content 5
             . account.sh
         fi
 
     # Ask for name if not logged in
     if [[ $userId == 0 ]]; then
-        clear
-        show_graphic | lolcat
+        clear_content 7
+        #show_graphic | lolcat
         printf "Welcome to Pizza Planet!\n\n"
         read -p "Please enter your name >> " name
-        clear
+        
     fi
 }
 
