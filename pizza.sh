@@ -115,7 +115,7 @@ echo "2. Medium                 5. Thin Crust"
 echo "3. Large                  6. Stuffed Crust"
 echo "0. Back to Main Menu"
 echo ""
-
+}
 
 function getSize {
 menuValidation 1 3 "Please select a size for your $pizza [1-3]: "
