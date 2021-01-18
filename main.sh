@@ -117,18 +117,9 @@ recordOrder() {     # $1:orderNo
 getCurrentOrderNo() {
     allOrdersLength=$(jq '.users[0].allOrders | length' customers.json)
 
-    if [[ $allOrdersLength -eq 0 ]]; then
-        lastOrder=0
-    else
-        lastOrder=$(jq '.users[0].allOrders[0]' customers.json)
-        for (( i = 0; i < allOrdersLength; i++ )); do
-            if [[ $(jq '.users[0].allOrders['$i']' customers.json) -gt $lastOrder ]]; then
-                lastOrder=$(jq '.users[0].allOrders['$i']' customers.json)
-            fi
-        done
-    fi
-    ((lastOrder++))
-    echo $lastOrder
+    currentOrderNum=$(( $allOrdersLength + 1 ))
+
+    echo $currentOrderNum
 }
 
 ################ CHECKOUT FUNCTIONS ################
