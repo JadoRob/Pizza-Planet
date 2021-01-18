@@ -36,9 +36,10 @@ function showGraphic() {
 }
 
 function showMenu() {
-	printf "$yellow"
+	printf "$green"
 	echo -e "Please choose by selecting a number: "
 	echo 
+	printf "$default"
 	echo -e "1. Wings"
 	echo -e "2. Sides"
 	echo -e "3. Pasta"
@@ -53,7 +54,7 @@ function setCurrentSubmenu() {
 }
 
 function showSubmenu() {
-	printf "$yellow"
+	printf "$default"
 	echo
 	echo "Here's our selection: "
 	echo
@@ -76,14 +77,14 @@ function menuValidation() {
 	while [[ ! ($option -ge $min && $option -le $max) ]]; do
 		printf "$blue"
 		read -p "$prompt >> " option
-			if [[ $option -eq 0 ]]; then
+			if [[ $option == 0 ]]; then
 				echo $option
 				echo "Returning to Main Menu..."
 				sleep 3
 				exit
 			fi
 		if [[ $option -lt $min || $option -gt $max ]]; then
-			echo -e "$red$errorMessage $yellow \n" 
+			echo -e "$red$errorMessage $default \n" 
 			sleep 2
 			printf "\e[1A\e[0K"
 			printf "\e[1A\e[0K"
@@ -98,7 +99,7 @@ function menuValidation() {
 until [ "$confirm" == "y" ]
 do
 	clear
-	showGraphic | lolcat -a -d 8
+	showGraphic | lolcat
 	showMenu
 	# while true; do
 	# 	read -p "What kind of food are you hungry for?: " foodType
