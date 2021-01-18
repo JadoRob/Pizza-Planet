@@ -1,33 +1,31 @@
 #!/bin/bash
 
-########### VARIABLES ###########
-choices=("Premade Pizza" "Custom Pizza" "Other" "Drinks")
-doneShopping=false
-deliveryFee=0.00
-deliveryStatus="ready"
+################ MENU FUNCTIONS ################
+welcome() {
+    showGraphic | lolcat
+    echo Welcome to Pizza Planet!
+    echo
+    echo [1] Login/Register.
+    echo [2] Continue as guest
+    echo
+        menuValidation 1 2 "[1-2]"
+        echo
+        if [[ $option == 1 ]]; then
+            clear
+            . account.sh
+        fi
 
-########### FUNCTIONS ###########
-showGraphic() {
-	echo "                                          _.oo."
-	echo "                   _.u[[/;:,.         .odMMMMMM'"
-	echo "                 .o888UU[[[/;:-.  .o@P^    MMM^"
-	echo "                oN88888UU[[[/;::-.        dP^"
-	echo "               dNMMNN888UU[[[/;::-.   .o@P^"
-	echo "              ,MMMMMMN888UU[[/;::-. o@^"
-	echo "              NNMMMNN888UU[[[/~.o@P^"
-	echo "              888888888UU[[[/o@^-.."
-	echo "             oI8888uu[[[/o@P^:--.."
-	echo "          .@^  YUU[[[/o@^;::---.."
-	echo "        oMP     ^/o@P^;:::---.."
-	echo "     .dMMM    .o@^ ^;::---..."
-	echo "    dMMMMMMM@^ `      `^^^^"
-	echo "   YMMMUP^"
-	echo "    ^^"
-	figlet "Pizza Planet"
-	echo
+    # Ask for name if not logged in
+    if [[ $userId == 0 ]]; then
+        clear
+        showGraphic | lolcat
+        printf "Welcome to Pizza Planet!\n\n"
+        read -p "Please enter your name >> " name
+        clear
+    fi
 }
 
-displayOptions() {  # Displays menu items
+mainMenu() {  # Displays main menu
     printf "What can we get you today, $name?\n"
     echo --------------------------------------------
     for i in ${!choices[@]}; do
@@ -35,10 +33,7 @@ displayOptions() {  # Displays menu items
     done
     echo --------------------------------------------
     echo
-    selectOption
-}
 
-selectOption() {
     menuValidation 1 4 "[1-4]"
     
     case $option in
@@ -49,31 +44,8 @@ selectOption() {
     esac
 }
 
-calcSubtotal() {   # Calculates total in cart.data
-    subTotal=0
 
-    while read line; do
-        if [[ $(echo $line | awk -F ':' '{printf NF}') == 2 ]]; then
-            i=$(echo $line | awk -F ':' '{ printf "%s", $2 }')
-        elif [[ $(echo $line | awk -F ':' '{printf NF}') == 3 ]]; then
-            i=$(echo $line | awk -F ':' '{ printf "%s", $3 }')
-        else
-            i=$(echo $line | awk -F ':' '{ printf "%s", $4 }')
-        fi
-
-        subTotal=$(bc <<< "$subTotal + $i")
-    done < cart.data
-
-    echo $subTotal
-}
-
-calcTax() {
-    tax=$(echo "scale=2;$subTotal*.05" | bc -l)
-    
-    if [[ $tax < 1 ]]; then tax="0$tax"; fi
-
-    echo $tax
-}
+################ CART FUNCTIONS ################
 
 displayCart() {
     echo '____________________________ YOUR CART ____________________________'
@@ -101,17 +73,7 @@ emptyCart() {
     fi
 }
 
-deliveryPrompt() {
-    menuValidation 1 2 "Enter [1] for Carryout, [2] for Delivery" "Invalid input. Please enter [1] for Carryout or [2] for Delivery"
-    orderType=$option
-
-    if [[ $((orderType)) == 2 ]]; then
-        deliveryFee=5.00
-        deliveryStatus="on the way"
-    fi
-}
-
-customerCart() {
+confirmCart() {
     # Order additional items
     while [ $doneShopping = false ]; do
         clear
@@ -119,19 +81,82 @@ customerCart() {
             echo "Cart is empty. Returning to main menu..."
             sleep 1
             clear
-            displayOptions
+            mainMenu
         else
             displayCart
             read -p $'\nWould you like to add anything else (Y/N)? >> ' yn
             if [[ $yn =~ [Yy] ]]; then
                 printf "\nWhat would you like to add?\n"
-                displayOptions
+                mainMenu
             else
                 doneShopping=true
                 echo
             fi
         fi
     done
+}
+
+
+################ ORDERS FUNCTIONS ################
+
+recordOrder() {     # $1:orderNo
+    curOrder=$(getCurrentOrderNo)
+    case $((
+        (curOrder >= 1 && curOrder <= 9) * 1 +
+        (curOrder >= 10 && curOrder <= 99) * 2 +
+        (curOrder >= 100 && curOrder <= 999) * 3 )) in
+            (1) curOrder="000${curOrder}" ;;
+            (2) curOrder="00${curOrder}" ;;
+            (3) curOrder="0${curOrder}" ;;
+    esac
+
+    mkdir -p orders
+    mv cart.data orders/order_$curOrder.data
+}
+
+getCurrentOrderNo() {
+    allOrdersLength=$(jq '.users[0].allOrders | length' customers.json)
+
+    if [[ $allOrdersLength -eq 0 ]]; then
+        lastOrder=0
+    else
+        lastOrder=$(jq '.users[0].allOrders[0]' customers.json)
+        for (( i = 0; i < allOrdersLength; i++ )); do
+            if [[ $(jq '.users[0].allOrders['$i']' customers.json) -gt $lastOrder ]]; then
+                lastOrder=$(jq '.users[0].allOrders['$i']' customers.json)
+            fi
+        done
+    fi
+    ((lastOrder++))
+    echo $lastOrder
+}
+
+################ CHECKOUT FUNCTIONS ################
+
+calcSubtotal() {   # Calculates total in cart.data
+    subTotal=0
+
+    while read line; do
+        if [[ $(echo $line | awk -F ':' '{printf NF}') == 2 ]]; then
+            i=$(echo $line | awk -F ':' '{ printf "%s", $2 }')
+        elif [[ $(echo $line | awk -F ':' '{printf NF}') == 3 ]]; then
+            i=$(echo $line | awk -F ':' '{ printf "%s", $3 }')
+        else
+            i=$(echo $line | awk -F ':' '{ printf "%s", $4 }')
+        fi
+
+        subTotal=$(bc <<< "$subTotal + $i")
+    done < cart.data
+
+    echo $subTotal
+}
+
+calcTax() {
+    tax=$(echo "scale=2;$subTotal*.05" | bc -l)
+    
+    if [[ $tax < 1 ]]; then tax="0$tax"; fi
+
+    echo $tax
 }
 
 checkout() {
@@ -155,31 +180,32 @@ checkout() {
 
     if [[ $yn =~ [Yy] ]]; then
         printf "\nThank you for choosing Planet Pizza! You will be notified once your order is $deliveryStatus.\n"
-        recordOrder $(currentOrderNo)
-        addOrder $userId $(currentOrderNo)
+        recordOrder $(getCurrentOrderNo)
+        addOrder $userId $(getCurrentOrderNo)
         echo "Have a great day!"
     fi
 }
 
+
+################ MENU/CHECKOUT VARIABLES ################
+choices=("Premade Pizza" "Custom Pizza" "Other" "Drinks")
+doneShopping=false
+deliveryFee=0.00
+deliveryStatus="ready"
+
+########## ACTIVE USER VARIABLES ##########
+### loginUser() fills these in
+userId=0
+name=""
+email=""
+orders=()
+
+
 ########### START SCRIPT ###########
 ./dependencies.sh   # checks for and installs required commands
+. functions.sh  # imports functions
 
-showGraphic | lolcat
-echo Welcome to Pizza Planet!
-echo
-. account.sh
-
-# For guest users
-if [[ $userId == 0 ]]; then
-    clear
-    showGraphic | lolcat
-    printf "Welcome to Pizza Planet!\n\n"
-    read -p "Please enter your name >> " name
-    clear
-fi
-
-displayOptions
-
-customerCart
-
+welcome
+mainMenu
+confirmCart
 checkout
