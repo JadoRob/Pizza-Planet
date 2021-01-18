@@ -196,6 +196,12 @@ show_graphic() {
 }
 
 ################ MISC ################
+clear_content() {   # $1:<# of lines>
+    for (( i = 0; i < $1; i++ )) do
+        printf "\e[1A\e[0K"
+    done
+}
+
 to_lowercase() {     # $1:<string>
     echo $(echo $1 | tr '[A-Z]' '[a-z]')
 }
