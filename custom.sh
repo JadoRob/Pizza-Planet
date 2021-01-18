@@ -2,6 +2,12 @@
 
 clear
 
+default="\e[0m"
+red="\e[31m"
+green="\e[32m"
+blue="\e[94m"
+yellow="\e[92m"
+
 counter=1
 pizza=Custom\ Pizza
 small=9.99; medium=11.99; large=14.99
@@ -28,10 +34,13 @@ function showGraphic() {
 }
 
 showGraphic | lolcat
+
+printf "$green"
 echo "Welcome to the customize pizza section of our menu!"
 echo ""
 echo "Custom Pizza Menu Options"
 echo ""
+printf "$default"
 
 function showToppings {
 
@@ -41,12 +50,40 @@ echo "$counter. ${toppings[$t]}"
 ((counter++))
 done
 }
-
+printf "$default"
 showToppings
+printf "$default"
+
+function menuValidation() { 
+	option=""
+	min=$1
+	max=$2
+	prompt=$3
+	errorMessage="Invalid input. Please enter a number between [$1-$2]"
+	if [[ -n $4 ]]; then errorMessage="$4"; fi
+	while [[ ! ($option -ge $min && $option -le $max) ]]; do
+		printf "$blue"
+		read -p "$prompt >> " option
+			if [[ $option == 0 ]]; then
+				echo $option
+				echo "Returning to Main Menu..."
+				sleep 3
+				exit
+			fi
+		if [[ $option -lt $min || $option -gt $max ]]; then
+			echo -e "$red$errorMessage $yellow \n" 
+			sleep 2
+			printf "\e[1A\e[0K"
+			printf "\e[1A\e[0K"
+			printf "\e[1A\e[0K"
+		fi
+	done
+}
 
 echo ""
 
-read -p "Please choose your first topping to add for your pizza >> " sel1
+menuValidation 1 21 "Please enter a number for your first topping [1-21]: "
+sel1=$option
 
 if (($sel1 == 1 ));
 then
@@ -113,8 +150,9 @@ then
 sel1=${toppings[20]}
 fi
 
-read -p "Please choose your second topping to add for your pizza >> " sel2
- 
+menuValidation 1 21 "Please enter a number for your second topping [1-21]: "
+sel2=$option 
+
 if (($sel2 == 1 ));
 then
 sel2=${toppings[0]}
@@ -180,7 +218,8 @@ then
 sel2=${toppings[20]}
 fi
 
-read -p "Please choose your third topping to add for your pizza >> " sel3
+menuValidation 1 21 "Please enter a number for your third topping [1-21]: "
+sel3=$option
 
 if (($sel3 == 1 ));
 then
@@ -247,6 +286,8 @@ then
 sel3=${toppings[20]}
 fi
 
+
+
 echo ""
 echo "Your three toppings were $sel1, $sel2, and  $sel3 on your custom pizza. "
 echo ""
@@ -265,8 +306,8 @@ echo ""
 }
 
 function getSize {
-echo "What size $pizza would you like? [1-3] >> "
-read option
+menuValidation 1 3 "Please select a size for your $pizza [1-3]: "
+
 if (($option == 1))
 then
 size="Small"
@@ -279,18 +320,12 @@ elif (($option == 3))
 then
 size="Large"
 price=$large
-elif (($option == 0))
-then
-exit
-elif (($option != 0 , 1 , 2 , 3))
-then
-echo "Sorry your selction was not valid please select another number"
-getSize
 fi
 }
+
 function getCrust {
-echo "What kind of crust would you like this $pizza to have? [4-6] >> "
-read option
+menuValidation 4 6 "Please select a crust for your $pizza [4-6]: "
+
 if (($option == 4 ))
 then
 crust="Pan Crust"
@@ -300,13 +335,6 @@ crust="Thin Crust"
 elif (($option == 6))
 then
 crust="Stuffed Crust"
-elif (($option == 0))
-then
-exit
-elif (($option != 0 , 4 , 5 , 6))
-then
-echo "Sorry your selction was not valid please select another number"
-getCrust
 fi
 }
 
