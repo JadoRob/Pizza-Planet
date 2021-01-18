@@ -307,6 +307,7 @@ echo ""
 
 function getSize {
 menuValidation 1 3 "Please select a size for your $pizza [1-3]: "
+size=$option
 
 if (($option == 1))
 then
@@ -325,6 +326,7 @@ fi
 
 function getCrust {
 menuValidation 4 6 "Please select a crust for your $pizza [4-6]: "
+crust=$option
 
 if (($option == 4 ))
 then
