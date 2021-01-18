@@ -4,7 +4,7 @@
 ### Read Functions
 ### GET functions require arguments noted
 
-getId() {   # $1:Email
+get_id() {   # $1:Email
     for (( i=1; i < $(jq '.users | length' customers.json); i++ )); do  # starts at 1 since users[0] contains guest checkouts
         if [[ $(jq '.users['$i'].email' customers.json) == \"$1\" ]]; then
             echo $i
@@ -13,17 +13,17 @@ getId() {   # $1:Email
     done
 }
 
-getEmail() {    # $1:UserID
+get_email() {    # $1:UserID
     user=$1
     echo $(jq '.users['$user'].email' customers.json | sed "s/\"//g")   # prints email based on User ID
 }
 
-getName() {     # $1:UserID
+get_name() {     # $1:UserID
     user=$1
     echo $(jq '.users['$user'].name' customers.json | sed "s/\"//g")    # prints name based on User ID
 }
 
-getOrders() {   # $1:UserID
+get_orders() {   # $1:UserID
     user=$1
     ordersLength=$(jq '.users['$user'].orders | length' customers.json)
     orderList=()
@@ -47,21 +47,21 @@ getOrders() {   # $1:UserID
 ### SET functions require User ID
 ### Prompts for email/name if not provided
 
-setEmail() {    # $1:UserID     $2:Email
+set_email() {    # $1:UserID     $2:Email
     user=$1
     if [[ -z "$2" ]]; then
-        askEmail
+        ask_email
     else
         emailInp=$2
     fi
 
-    emailInp=$(toLowercase $emailInp)
+    emailInp=$(to_lowercase $emailInp)
 
     echo "$(jq '.users['$user'].email |= "'$emailInp'"' customers.json)" > customers.json   # change email in json file
     
 }
 
-setName() {     # $1:UserID     $2:Name
+set_name() {     # $1:UserID     $2:Name
     user=$1
     if [[ -z "$2" ]]; then  # if no args
         read -p "Name >> " nameInp
@@ -76,15 +76,15 @@ setName() {     # $1:UserID     $2:Name
 ### Create Functions
 ### Adds data to json
 
-addUser() {     # $1:Email      $2:Name
+add_user() {     # $1:Email      $2:Name
     user=$(jq '.users | length' customers.json)
-    setEmail $user $1
+    set_email $user $1
     echo
-    setName $user
+    set_name $user
     echo "$(jq '.users['$user'].orders |= []' customers.json)" > customers.json     # writes in new user info at the end of .users[] in json file
 }
 
-addOrder() {    # $1:userId     $2:orderNo
+add_order() {    # $1:userId     $2:orderNo
     user=$1
     orderNo=$2
     echo "$(jq '.users['$user'].orders += ['$orderNo']' customers.json)" > customers.json    # adds order based on User ID
@@ -94,14 +94,14 @@ addOrder() {    # $1:userId     $2:orderNo
 
 ################ LOGIN/LOGOUT ################
 
-loginUser() {   # $1:Email
-    userId=$(getId $1)
-    name=$(getName $userId)
-    email=$(getEmail $userId)
-    orders=( $(getOrders $userId) )
+login_user() {   # $1:Email
+    userId=$(get_id $1)
+    name=$(get_name $userId)
+    email=$(get_email $userId)
+    orders=( $(get_orders $userId) )
 }
 
-logoutUser() {
+logout_user() {
     userId=0
     name=""
     email=""
@@ -110,7 +110,7 @@ logoutUser() {
 }
 
 ################ VALIDATORS ################
-validEmail() {   # $1:Email
+valid_email() {   # $1:Email
     if [[ -z $1 ]]; then
         return 0
     fi
@@ -121,7 +121,7 @@ validEmail() {   # $1:Email
     fi
 }
 
-menuValidation() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
+valid_menu_prompt() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
     option=""   # reset reusable variable
     min=$1
     max=$2
@@ -145,17 +145,17 @@ menuValidation() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
 
 ################ PROMPTS ################
 
-askEmail() {    # $1:Message
+ask_email() {    # $1:Message
     emailInp=""
     if [[ -z $1 ]]; then
         message="Email Address"
     else
         message=$1
     fi
-    while [[ ! $(validEmail $emailInp) ]]; do
+    while [[ ! $(valid_email $emailInp) ]]; do
         # if [[ userId -ne 0 ]]; then clear; fi
         read -p "$message >> " emailInp
-        if [[ ! $(validEmail $emailInp) ]]; then
+        if [[ ! $(valid_email $emailInp) ]]; then
             echo -e "\nInvalid email. Please try again."
             sleep 1
             printf "\e[1A\e[0K"
@@ -165,8 +165,8 @@ askEmail() {    # $1:Message
     done
 }
 
-deliveryPrompt() {
-    menuValidation 1 2 "Enter [1] for Carryout, [2] for Delivery" "Invalid input. Please enter [1] for Carryout or [2] for Delivery"
+delivery_prompt() {
+    valid_menu_prompt 1 2 "Enter [1] for Carryout, [2] for Delivery" "Invalid input. Please enter [1] for Carryout or [2] for Delivery"
     orderType=$option
 
     if [[ $((orderType)) == 2 ]]; then
@@ -177,7 +177,7 @@ deliveryPrompt() {
 
 
 ################ GRAPHICS ################
-showGraphic() {
+show_graphic() {
 	echo "                                          _.oo."
 	echo "                   _.u[[/;:,.         .odMMMMMM'"
 	echo "                 .o888UU[[[/;:-.  .o@P^    MMM^"
@@ -198,6 +198,6 @@ showGraphic() {
 }
 
 ################ MISC ################
-toLowercase() {     # $1:<string>
+to_lowercase() {     # $1:<string>
     echo $(echo $1 | tr '[A-Z]' '[a-z]')
 }

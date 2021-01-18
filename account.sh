@@ -1,6 +1,6 @@
 #!/bin/bash
 
-accountMenu() {
+account_menu() {
     option=''
     while [[ $option != "1" ]]; do
         if [[ $option != 2 ]]; then clear; fi
@@ -15,20 +15,20 @@ accountMenu() {
         echo [4] Change Name
         echo "[5] Logout (order as guest)"
         echo
-        menuValidation 1 5 "Welcome, $name! What would you like to do?"
+        valid_menu_prompt 1 5 "Welcome, $name! What would you like to do?"
         echo
 
         case $option in
             1) clear; return ;;
-            2) clear; orderHistory; clear ;;
-            3) setEmail $userId; email=$(getEmail $userId) ;;
-            4) setName $userId; name=$(getName $userId) ;;
-            5) clear; logoutUser; return ;;
+            2) clear; order_history; clear ;;
+            3) set_email $userId; email=$(get_email $userId) ;;
+            4) set_email $userId; name=$(get_name $userId) ;;
+            5) clear; logout_user; return ;;
         esac
     done
 }
 
-orderHistory() {
+order_history() {
 
     for order in ${orders[@]}; do
         echo "[ORDER# $order]"
@@ -55,21 +55,21 @@ orderHistory() {
 
 ########### START SCRIPT ###########
 
-askEmail "Please enter your email address"
+ask_email "Please enter your email address"
 
-emailInp=$(toLowercase $emailInp)
+emailInp=$(to_lowercase $emailInp)
 
-if [[ $(getId $emailInp) ]]; then
-    loginUser $emailInp
-    accountMenu
+if [[ $(get_id $emailInp) ]]; then
+    login_user $emailInp
+    account_menu
 else
     echo -e "\nNo matches for $emailInp. Create account?\n"
     read -p "Enter [1] to create account. Enter [2] for guest checkout >> " inp
     if [[ inp -eq 1 ]]; then
-        addUser $emailInp
+        add_user $emailInp
         newUserId=$(( $(jq '.users | length' customers.json) - 1 )) # new user is at the end of json array (.users[].length - 1)
-        newEmail=$(getEmail $newUserId)
-        loginUser $newEmail
-        accountMenu
+        newEmail=$(get_email $newUserId)
+        login_user $newEmail
+        account_menu
     fi
 fi
