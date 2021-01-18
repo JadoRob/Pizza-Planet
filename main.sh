@@ -63,6 +63,7 @@ display_cart() {
     done
     echo ___________________________________________________________________
     printf "%64s" "SUBTOTAL: \$$(calc_subtotal)"
+    echo
 }
 
 empty_cart() {
