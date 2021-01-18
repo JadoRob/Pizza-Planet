@@ -172,7 +172,7 @@ checkout() {
     if [[ $yn =~ [Yy] ]]; then
         printf "\nThank you for choosing Planet Pizza! You will be notified once your order is $deliveryStatus.\n"
         record_order $(get_current_order_no)
-        addOrder $userId $(get_current_order_no)
+        add_order $userId $(get_current_order_no)
         echo "Have a great day!"
     fi
 }

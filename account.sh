@@ -21,8 +21,8 @@ account_menu() {
         case $option in
             1) clear; return ;;
             2) clear; order_history; clear ;;
-            3) set_email $userId; email=$(get_email $userId) ;;
-            4) set_email $userId; name=$(get_name $userId) ;;
+            3) set_email $userId; email=$(get_email $userId); clear; printf "\nEmail updated successfully."; sleep 1 ;;
+            4) set_name $userId; name=$(get_name $userId); clear; printf "\nName updated successfully."; sleep 1  ;;
             5) clear; logout_user; return ;;
         esac
     done

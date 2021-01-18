@@ -58,7 +58,6 @@ set_email() {    # $1:UserID     $2:Email
     emailInp=$(to_lowercase $emailInp)
 
     echo "$(jq '.users['$user'].email |= "'$emailInp'"' customers.json)" > customers.json   # change email in json file
-    
 }
 
 set_name() {     # $1:UserID     $2:Name
@@ -69,7 +68,6 @@ set_name() {     # $1:UserID     $2:Name
         nameInp=$2
     fi
     echo "$(jq --arg newName "$nameInp" '.users['$user'].name |= $newName' customers.json)" > customers.json    # change name in json file
-
 }
 
 
