@@ -1,11 +1,6 @@
 #!/bin/bash
 #Ask for the preferrred drink
-clear
-sleep 2
 drink=$Drinks
-20oz Bottle=2.99
-2-liter Bottle=3.99
-
 default="\e[0m"
 red="\e[31m"
 green="\e[32m"
@@ -117,7 +112,7 @@ price="$size"
 elif (($option == 7))
 then
 drink="Fanta Orange"
-price"=$size"
+price="$size"
 elif (($option == 8))
 then
 drink="Sierra Mist"
@@ -145,6 +140,7 @@ fi
 }
 until [ "$question" == "y" ]
 do
+clear
 showOptions
 getOrder
 
