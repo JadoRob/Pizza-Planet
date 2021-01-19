@@ -118,9 +118,9 @@ echo ""
 }
 
 function getSize {
+printf "$blue"
 menuValidation 1 3 "Please select a size for your $pizza pizza [1-3]: "
 size=$option
-
 if (($option == 1))
 then
 size="Small"
@@ -137,6 +137,7 @@ fi
 }
 
 function getCrust {
+printf "$blue"
 menuValidation 4 6 "Please select a crust for your $pizza pizza [4-6]: "
 crust=$option
 
@@ -157,10 +158,14 @@ do
 showOptions
 getSize
 getCrust
+
+printf "$blue"
 echo "Add a $size $crust $pizza for $price to your order? [y/n] >> "
 read question
 done
+printf "$green"
 echo "$size:$crust:$pizza pizza:$price:$top1:$top2:$top3" >> cart.data
 echo "Thank you, your order has been added. Returning to the main menu."
 sleep 3
 exit
+
