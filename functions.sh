@@ -63,7 +63,10 @@ set_email() {    # $1:UserID     $2:Email
 set_name() {     # $1:UserID     $2:Name
     user=$1
     if [[ -z "$2" ]]; then  # if no args
-        read -p "Name >> " nameInp
+        printf "$blue"
+        printf "Name >> "
+        printf "$default"
+        read nameInp;
     else
         nameInp=$2
     fi
@@ -119,7 +122,7 @@ valid_email() {   # $1:Email
     fi
 }
 
-valid_menu_prompt() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
+validate_menu() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
     option=""   # reset reusable variable
     min=$1
     max=$2
@@ -128,10 +131,11 @@ valid_menu_prompt() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
     if [[ -n $4 ]]; then errorMessage="$4"; fi
     
     while [[ ! ($option -ge $min && $option -le $max) ]]; do
-        read -p "$prompt >> " option
+        printf "$blue$prompt >> $default"
+        read option;
         if [[ $option -lt $min || $option -gt $max ]]; then
             echo
-            echo $errorMessage
+            echo -e  $red$errorMessage$default
             sleep 2
             printf "\e[1A\e[0K"
             printf "\e[1A\e[0K"
@@ -151,10 +155,12 @@ ask_email() {    # $1:Message
         message=$1
     fi
     while [[ ! $(valid_email $emailInp) ]]; do
-        # if [[ userId -ne 0 ]]; then clear; fi
-        read -p "$message >> " emailInp
+        printf "$blue$message >> $default"
+        read emailInp;
         if [[ ! $(valid_email $emailInp) ]]; then
-            echo -e "\nInvalid email. Please try again."
+            printf "$red"
+            echo -e "\nInvalid email. Please try again"
+            printf "$default"
             sleep 1
             printf "\e[1A\e[0K"
             printf "\e[1A\e[0K"
@@ -164,7 +170,7 @@ ask_email() {    # $1:Message
 }
 
 delivery_prompt() {
-    valid_menu_prompt 1 2 "Enter [1] for Carryout, [2] for Delivery" "Invalid input. Please enter [1] for Carryout or [2] for Delivery"
+    validate_menu 1 2 "Enter [1] for Carryout, [2] for Delivery" "Invalid input. Please enter [1] for Carryout or [2] for Delivery"
     orderType=$option
 
     if [[ $((orderType)) == 2 ]]; then
@@ -195,12 +201,17 @@ show_graphic() {
 	echo
 }
 
-################ MISC ################
-clear_content() {   # $1:<# of lines>
-    for (( i = 0; i < $1; i++ )) do
-        printf "\e[1A\e[0K"
-    done
+header() {
+    clear
+    show_graphic | lolcat
 }
+
+# Colors
+default="\e[0m"
+red="\e[31m"
+green="\e[32m"
+blue="\e[94m"
+yellow="\e[92m"
 
 to_lowercase() {     # $1:<string>
     echo $(echo $1 | tr '[A-Z]' '[a-z]')
