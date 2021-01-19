@@ -295,8 +295,10 @@ echo ""
 
 
 function showOptions {
+printf "$green"
 echo "These are our sizes and crusts available: "
 echo ""
+printf "$default"
 echo "Size                      Crust"
 echo "1. Small                  4. Pan Crust"
 echo "2. Medium                 5. Thin Crust"
@@ -306,6 +308,7 @@ echo ""
 }
 
 function getSize {
+printf "$blue"
 menuValidation 1 3 "Please select a size for your $pizza pizza [1-3]: "
 size=$option
 
@@ -325,6 +328,7 @@ fi
 }
 
 function getCrust {
+printf "$blue"
 menuValidation 4 6 "Please select a crust for your $pizza pizza [4-6]: "
 crust=$option
 
@@ -346,6 +350,7 @@ getCrust
 
 while true; do
 read -p "Add a $size $crust $pizza with $sel1, $sel2, and  $sel3 for $price to your order? [y/n] >> " yn
+printf "$green"
 case $yn in
 [Yy]* ) echo "Thank you, your order has been added to the cart!!"; break;;
 [Nn]* ) echo "Sorry for the confusion lets begin again."; sleep 2 ;./custom.sh; break;;
