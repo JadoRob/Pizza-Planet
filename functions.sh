@@ -131,8 +131,13 @@ validate_menu() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
     if [[ -n $4 ]]; then errorMessage="$4"; fi
     
     while [[ ! ($option -ge $min && $option -le $max) ]]; do
+<<<<<<< HEAD
         printf "$blue$prompt >> $default"
         read option;
+=======
+        printf "$blue"
+        read -p "$prompt >> " option
+>>>>>>> e64a7f9a5b0ac14564c62ceac7d96c639d7fe10d
         if [[ $option -lt $min || $option -gt $max ]]; then
             echo
             echo -e  $red$errorMessage$default
@@ -213,6 +218,16 @@ green="\e[32m"
 blue="\e[94m"
 yellow="\e[92m"
 
+<<<<<<< HEAD
+=======
+################ MISC ################
+# clear_content() {   # $1:<# of lines>
+#     for (( i = 0; i < $1; i++ )) do
+#         printf "\e[1A\e[0K"
+#     done
+# }
+
+>>>>>>> e64a7f9a5b0ac14564c62ceac7d96c639d7fe10d
 to_lowercase() {     # $1:<string>
     echo $(echo $1 | tr '[A-Z]' '[a-z]')
 }

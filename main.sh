@@ -3,7 +3,7 @@
 ################ MENU FUNCTIONS ################
 welcome() {
     clear
-    show_graphic | lolcat -a -d 8
+    show_graphic | lolcat
     printf "$green"
     echo Welcome to Pizza Planet!
     echo
