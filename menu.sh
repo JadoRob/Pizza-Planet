@@ -74,6 +74,7 @@ echo 9\) BBQ Chicken pizza
 echo 10\) Supreme pizza
 echo ""
 
+printf "$blue"
 menuValidation 1 10 "Please pick a premade pizza [1-10]: "
 choice=$option
 
