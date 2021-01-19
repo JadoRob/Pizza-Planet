@@ -2,31 +2,63 @@
 
 ################ MENU FUNCTIONS ################
 welcome() {
-    show_graphic | lolcat -a -d 8 
+    clear
+    show_graphic | lolcat -a -d 8
+    printf "$green"
     echo Welcome to Pizza Planet!
     echo
+    printf "$default"
     echo [1] Login/Register.
     echo [2] Continue as guest
     echo
-        valid_menu_prompt 1 2 "[1-2]"
-        echo
-        if [[ $option == 1 ]]; then
-            clear_content 5
-            . account.sh
-        fi
+    validate_menu 1 2 "[1-2]"
+    echo
+    if [[ $option == 1 ]]; then
+        clear
+        . account.sh
+    fi
 
-    # Ask for name if not logged in
+    #Ask for name if not logged in
     if [[ $userId == 0 ]]; then
-        clear_content 7
-        #show_graphic | lolcat
-        printf "Welcome to Pizza Planet!\n\n"
+        header
+        printf "$blue"
         read -p "Please enter your name >> " name
-        
     fi
 }
 
+# welcome() {
+#     show_graphic | lolcat -a -d 8 
+#     echo Welcome to Pizza Planet!
+#     echo
+#     echo [1] Login/Register.
+#     echo [2] Continue as guest
+#     echo
+#         validate_menu 1 2 "[1-2]"
+#         echo
+#         if [[ $option == 1 ]]; then
+#             clear_content 5
+#             . account.sh
+#         fi
+
+#     # Ask for name if not logged in
+#     if [[ $userId == 0 ]]; then
+#         clear_content 7
+#         #show_graphic | lolcat
+#         printf "Welcome to Pizza Planet!\n\n"
+#         read -p "Please enter your name >> " name
+        
+#     fi
+# }
+
 main_menu() {  # Displays main menu
-    printf "What can we get you today, $name?\n"
+    header
+    printf "$green"
+    if [[ -z $1 ]]; then
+        printf "What can we get you today, $name?\n"
+    else
+        printf "$1\n"
+    fi
+    printf "$default"
     echo --------------------------------------------
     for i in ${!choices[@]}; do
         echo $(($i+1))\) ${choices[$i]}
@@ -34,7 +66,7 @@ main_menu() {  # Displays main menu
     echo --------------------------------------------
     echo
 
-    valid_menu_prompt 1 4 "[1-4]"
+    validate_menu 1 4 "[1-4]"
     
     case $option in
         1) ./menu.sh ;;
@@ -48,7 +80,9 @@ main_menu() {  # Displays main menu
 ################ CART FUNCTIONS ################
 
 display_cart() {
-    echo '____________________________ YOUR CART ____________________________'
+    header
+    echo -e $green'____________________________'$default 'YOUR CART' $green'____________________________'
+    printf "$default"
     cat cart.data | while read line; do
         if [[ $(echo $line | awk -F ':' '{printf NF}') == 2 ]]; then
             echo $line | awk -F ':' '{ printf "\n  %-55s $%s\n", $1, $2 }'
@@ -61,7 +95,7 @@ display_cart() {
             echo -e "    \u2022 Toppings: "$(echo $line | awk -F ':' '{for (i = 5; i < NF; i++) printf $i", "} {if (NF > 4) printf $(NF)}')
         fi
     done
-    echo ___________________________________________________________________
+    echo -e $green'___________________________________________________________________'$default
     printf "%64s" "SUBTOTAL: \$$(calc_subtotal)"
     echo
 }
@@ -77,7 +111,7 @@ empty_cart() {
 confirm_cart() {
     # Order additional items
     while [ $doneShopping = false ]; do
-        clear
+        header
         if [[ $(empty_cart) == true ]]; then
             echo "Cart is empty. Returning to main menu..."
             sleep 1
@@ -85,10 +119,12 @@ confirm_cart() {
             main_menu
         else
             display_cart
+            printf "$blue"
             read -p $'\nWould you like to add anything else (Y/N)? >> ' yn
+            printf "$default"
             if [[ $yn =~ [Yy] ]]; then
-                printf "\nWhat would you like to add?\n"
-                main_menu
+                # printf "\nWhat would you like to add?\n"
+                main_menu "What would you like to add?"
             else
                 doneShopping=true
                 echo
@@ -159,7 +195,7 @@ checkout() {
     tax=$(calc_tax)
     grandTotal=$(bc <<< $tax+$subTotal+$deliveryFee)
 
-    printf "\nLooks great, your total before tax comes to \$$subTotal\n\n"
+    printf $green"\nLooks great, your total before tax comes to \$$subTotal\n\n"$default
 
     # Display totals
     echo "     Subtotal: \$$subTotal"
@@ -167,11 +203,11 @@ checkout() {
     echo "Estimated Tax:  \$$tax"
     echo "   GrandTotal: \$$grandTotal"
     echo
-
+    printf $blue
     read -p "Confirm purchase (Y/N)? " yn
 
     if [[ $yn =~ [Yy] ]]; then
-        printf "\nThank you for choosing Planet Pizza! You will be notified once your order is $deliveryStatus.\n"
+        printf "$green\nThank you for choosing Planet Pizza! You will be notified once your order is $deliveryStatus.\n"
         record_order $(get_current_order_no)
         add_order $userId $(get_current_order_no)
         echo "Have a great day!"

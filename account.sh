@@ -3,11 +3,12 @@
 account_menu() {
     option=''
     while [[ $option != "1" ]]; do
-        if [[ $option != 2 ]]; then clear; fi
-
+        if [[ $option != 2 ]]; then header; fi
+        printf "$green"
         echo "User ID: $userId"
         echo "Name: $name"
         echo "Email: $email"
+        printf "$default"
         echo
         echo [1] Order
         echo [2] View Order History
@@ -15,14 +16,14 @@ account_menu() {
         echo [4] Change Name
         echo "[5] Logout (order as guest)"
         echo
-        valid_menu_prompt 1 5 "Welcome, $name! What would you like to do?"
+        validate_menu 1 5 "Welcome, $name! What would you like to do?"
         echo
 
         case $option in
             1) clear; return ;;
-            2) clear; order_history; clear ;;
-            3) set_email $userId; email=$(get_email $userId); clear; printf "\nEmail updated successfully."; sleep 1 ;;
-            4) set_name $userId; name=$(get_name $userId); clear; printf "\nName updated successfully."; sleep 1  ;;
+            2) header; order_history; header ;;
+            3) set_email $userId; email=$(get_email $userId); header; printf $green"\nEmail updated successfully."$default; sleep 1 ;;
+            4) set_name $userId; name=$(get_name $userId); header; printf $green"\nName updated successfully."$default; sleep 1  ;;
             5) clear; logout_user; return ;;
         esac
     done
@@ -48,14 +49,18 @@ order_history() {
         echo -------------------------------------------------------------------
         printf "\n\n"
     done
-
+    printf "$blue"
     read -n 1 -s -r -p "Press any key to continue >> "
+    printf "$default"
 }
 
 
 ########### START SCRIPT ###########
 
+header
+printf "$blue"
 ask_email "Please enter your email address"
+printf "$default"
 
 emailInp=$(to_lowercase $emailInp)
 
