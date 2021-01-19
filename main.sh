@@ -22,33 +22,11 @@ welcome() {
     if [[ $userId == 0 ]]; then
         header
         printf "$blue"
-        read -p "Please enter your name >> " name
+        printf "Please enter your name >> "
+        printf "$default"
+        read name;
     fi
 }
-
-# welcome() {
-#     show_graphic | lolcat -a -d 8 
-#     echo Welcome to Pizza Planet!
-#     echo
-#     echo [1] Login/Register.
-#     echo [2] Continue as guest
-#     echo
-#         validate_menu 1 2 "[1-2]"
-#         echo
-#         if [[ $option == 1 ]]; then
-#             clear_content 5
-#             . account.sh
-#         fi
-
-#     # Ask for name if not logged in
-#     if [[ $userId == 0 ]]; then
-#         clear_content 7
-#         #show_graphic | lolcat
-#         printf "Welcome to Pizza Planet!\n\n"
-#         read -p "Please enter your name >> " name
-        
-#     fi
-# }
 
 main_menu() {  # Displays main menu
     header
@@ -120,10 +98,10 @@ confirm_cart() {
         else
             display_cart
             printf "$blue"
-            read -p $'\nWould you like to add anything else (Y/N)? >> ' yn
+            printf '\nWould you like to add anything else [y/n]? >> '
             printf "$default"
+            read yn;
             if [[ $yn =~ [Yy] ]]; then
-                # printf "\nWhat would you like to add?\n"
                 main_menu "What would you like to add?"
             else
                 doneShopping=true
@@ -203,8 +181,11 @@ checkout() {
     echo "Estimated Tax:  \$$tax"
     echo "   GrandTotal: \$$grandTotal"
     echo
-    printf $blue
-    read -p "Confirm purchase (Y/N)? " yn
+
+    printf "$blue"
+    printf "Confirm purchase [y/n]? >> "
+    printf "$default"
+    read yn
 
     if [[ $yn =~ [Yy] ]]; then
         printf "$green\nThank you for choosing Planet Pizza! You will be notified once your order is $deliveryStatus.\n"
