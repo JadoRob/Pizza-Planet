@@ -13,7 +13,6 @@ default="\e[0m"
 red="\e[31m"
 green="\e[32m"
 blue="\e[94m"
-yellow="\e[92m"
 
 function showGraphic() {
 	printf "%*s\n" $(((47+$COLUMNS)/2)) "                                          _.oo."
@@ -37,14 +36,14 @@ function showGraphic() {
 
 function showMenu() {
 	printf "$green"
-	echo -e "Please choose by selecting a number: "
+	echo "Please choose by selecting a number: "
 	echo 
 	printf "$default"
-	echo -e "1. Wings"
-	echo -e "2. Sides"
-	echo -e "3. Pasta"
+	echo "1. Wings"
+	echo "2. Sides"
+	echo "3. Pasta"
 	echo
-	echo -e "0. Return to Main Menu"
+	echo "0. Return to Main Menu"
 	echo
 }
 
@@ -54,10 +53,11 @@ function setCurrentSubmenu() {
 }
 
 function showSubmenu() {
-	printf "$default"
+	printf "$green"
 	echo
 	echo "Here's our selection: "
 	echo
+	printf "$default"
 	#show items in the sub menu and save the food type with .data to $file
 	case $1 in
 		1) awk -F: '{print NR". " $1}' wings.data; setCurrentSubmenu "wings.data";;
@@ -96,41 +96,14 @@ function menuValidation() {
 #------------------------------------------------------------------------------------
 # Start of script
 
-until [ "$confirm" == "y" ]
+until [[ "$confirm" =~ [Yy] ]]
 do
 	clear
 	showGraphic | lolcat
 	showMenu
-	# while true; do
-	# 	read -p "What kind of food are you hungry for?: " foodType
-	# 	[[ $foodType =~ ^[0-9]+$ ]] || { echo "Please enter a valid number: "; echo; continue; }
-	# 	if (($foodType >= 0 && $foodType <= 3)); then
-	# 		break
-	# 	else
-	# 		echo "Please choose a number listed above: "
-	# 		echo
-	# 	fi
-	# done
 	menuValidation 1 3 "Please select a number [1-3]: "
-
-	# if (($option==0)); then
-	# 	echo "Returning to Main Menu..."
-	# 	sleep 3
-	# 	exit
-	# fi
 	showSubmenu $option
 	menuValidation 1 $totalItems "Please select a number [1-$totalItems]"
-	# while true; do
-	# 	read -p "What would you like?: " choice
-	# 	[[ $choice =~ ^[0-9]+$ ]] || { echo "Please enter a valid number: "; echo; continue; }
-	# 	if (($choice >= 1 && $choice <= $totalItems)); then
-	# 		break
-	# 	else
-	# 		echo "Please choose a number listed above: "
-	# 		echo 
-	# 	fi
-	# done
-	#Stores the line defined in $choice from the data file ($file)
 	product=$(awk -v var="$option" '{if(NR==var) print $0}' $file)
 	item=$(echo "$product" | cut -d ":" -f1)
 	price=$(echo "$product" | cut -d ":" -f2)
