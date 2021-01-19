@@ -58,7 +58,6 @@ main_menu() {  # Displays main menu
 ################ CART FUNCTIONS ################
 
 display_cart() {
-    header
     echo -e $green'____________________________'$default 'YOUR CART' $green'____________________________'
     printf "$default"
     cat cart.data | while read line; do
