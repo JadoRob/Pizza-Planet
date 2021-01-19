@@ -78,7 +78,7 @@ echo "Tripple cheese of Motzorella, Cheddar, and Gorgonzolla "
 elif [[ $pizza == "Veggie" ]]
 then
 echo "Red Onions, Mushrooms and Black Olives "
-elif [[ $pizza == "Meat" ]]
+elif [[ $pizza == "Meat Lovers" ]]
 then
 echo "Pepperoni, Sausage and Bacon"
 elif [[ $pizza == "Hawaiian" ]]
