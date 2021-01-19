@@ -119,7 +119,7 @@ valid_email() {   # $1:Email
     fi
 }
 
-valid_menu_prompt() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
+validate_menu() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
     option=""   # reset reusable variable
     min=$1
     max=$2
@@ -128,10 +128,11 @@ valid_menu_prompt() {  # $1:min    $2:max  $3:prompt   $4:errorMessage
     if [[ -n $4 ]]; then errorMessage="$4"; fi
     
     while [[ ! ($option -ge $min && $option -le $max) ]]; do
+        printf "$blue"
         read -p "$prompt >> " option
         if [[ $option -lt $min || $option -gt $max ]]; then
             echo
-            echo $errorMessage
+            echo -e  $red$errorMessage$default
             sleep 2
             printf "\e[1A\e[0K"
             printf "\e[1A\e[0K"
@@ -164,7 +165,7 @@ ask_email() {    # $1:Message
 }
 
 delivery_prompt() {
-    valid_menu_prompt 1 2 "Enter [1] for Carryout, [2] for Delivery" "Invalid input. Please enter [1] for Carryout or [2] for Delivery"
+    validate_menu 1 2 "Enter [1] for Carryout, [2] for Delivery" "Invalid input. Please enter [1] for Carryout or [2] for Delivery"
     orderType=$option
 
     if [[ $((orderType)) == 2 ]]; then
@@ -195,12 +196,24 @@ show_graphic() {
 	echo
 }
 
-################ MISC ################
-clear_content() {   # $1:<# of lines>
-    for (( i = 0; i < $1; i++ )) do
-        printf "\e[1A\e[0K"
-    done
+header() {
+    clear
+    show_graphic | lolcat
 }
+
+# Colors
+default="\e[0m"
+red="\e[31m"
+green="\e[32m"
+blue="\e[94m"
+yellow="\e[92m"
+
+################ MISC ################
+# clear_content() {   # $1:<# of lines>
+#     for (( i = 0; i < $1; i++ )) do
+#         printf "\e[1A\e[0K"
+#     done
+# }
 
 to_lowercase() {     # $1:<string>
     echo $(echo $1 | tr '[A-Z]' '[a-z]')
